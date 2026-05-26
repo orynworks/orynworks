@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { Web3Provider } from "@/components/Web3Provider";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -36,7 +37,7 @@ export default function RootLayout({
       className={`${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable}`}
     >
       <body className="bg-warmdark text-cream font-sans antialiased min-h-screen">
-        {children}
+        <Web3Provider>{children}</Web3Provider>
       </body>
     </html>
   );
