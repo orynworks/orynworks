@@ -1,0 +1,36 @@
+# deps
+node_modules/
+.pnpm-store/
+
+# build outputs
+.next/
+dist/
+out/
+build/
+
+# env
+.env
+.env.local
+.env.*.local
+
+# logs
+*.log
+.npm/
+.pnpm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# foundry
+packages/contracts/cache/
+packages/contracts/out/
+packages/contracts/broadcast/
+
+# postgres data
+.postgres-data/
+
+# superpowers brainstorm sessions (per-session, regenerated)
+.superpowers/
