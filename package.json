@@ -3,18 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm -r --parallel run dev",
+    "dev": "concurrently -n web,gateway -c cyan,magenta \"pnpm --filter @oryn/web dev\" \"pnpm --filter @oryn/gateway dev\"",
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",
     "lint": "pnpm -r run lint",
     "db:up": "docker compose up -d postgres",
     "db:down": "docker compose down",
-    "db:migrate": "pnpm --filter @oryn/db run migrate"
+    "db:migrate": "pnpm --filter @oryn/db run migrate",
+    "db:studio": "pnpm --filter @oryn/db run studio"
   },
   "devDependencies": {
-    "typescript": "^5.5.0",
+    "@types/node": "^20.14.0",
+    "concurrently": "^9.2.1",
     "tsx": "^4.16.0",
-    "@types/node": "^20.14.0"
+    "typescript": "^5.5.0"
   },
   "packageManager": "pnpm@10.33.2",
   "engines": {
