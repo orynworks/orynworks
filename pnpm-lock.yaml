@@ -29,9 +29,15 @@ importers:
       '@fastify/jwt':
         specifier: ^8.0.1
         version: 8.0.1
+      '@oryn/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       fastify:
         specifier: ^4.28.0
         version: 4.29.1
+      jose:
+        specifier: ^6.2.3
+        version: 6.2.3
       zod:
         specifier: ^3.23.0
         version: 3.25.76
