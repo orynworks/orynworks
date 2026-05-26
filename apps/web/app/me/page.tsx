@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
+import { Header } from "@/components/Header";
 import { getSession } from "@/lib/get-session";
 
 export default async function MePage() {
@@ -11,12 +11,7 @@ export default async function MePage() {
 
   return (
     <main className="min-h-screen flex flex-col">
-      <header className="flex items-center justify-between px-6 py-4 border-b border-cream/10">
-        <Link href="/" className="font-serif text-xl">oryn</Link>
-        <span className="text-xs font-mono tracking-wider text-cream/60 uppercase">
-          {session.address.slice(0, 6)}…{session.address.slice(-4)}
-        </span>
-      </header>
+      <Header showDashboardLink={false} />
       <div className="flex-1 px-6 py-12 max-w-3xl mx-auto w-full">
         <p className="text-xs tracking-[0.3em] text-cream/60 uppercase mb-4">
           Profile
