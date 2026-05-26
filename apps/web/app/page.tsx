@@ -1,11 +1,25 @@
+import Link from "next/link";
 import { ConnectButton } from "@/components/ConnectButton";
+import { getSession } from "@/lib/get-session";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await getSession();
+
   return (
     <main className="min-h-screen flex flex-col">
       <header className="flex items-center justify-between px-6 py-4 border-b border-cream/10">
         <span className="font-serif text-xl">oryn</span>
-        <ConnectButton />
+        <div className="flex items-center gap-4">
+          {session && (
+            <Link
+              href="/me"
+              className="text-xs font-mono tracking-wider uppercase text-cream/70 hover:text-orange"
+            >
+              Dashboard →
+            </Link>
+          )}
+          <ConnectButton />
+        </div>
       </header>
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
         <div className="max-w-2xl text-center">
