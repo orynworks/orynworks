@@ -1,0 +1,11 @@
+import type { FastifyPluginAsync } from "fastify";
+
+export const healthRoute: FastifyPluginAsync = async (fastify) => {
+  fastify.get("/health", async () => {
+    return {
+      status: "ok",
+      service: "oryn-gateway",
+      timestamp: new Date().toISOString(),
+    };
+  });
+};
