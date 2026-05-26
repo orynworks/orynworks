@@ -38,7 +38,15 @@ export async function POST(req: NextRequest) {
 
   const publicClient = createPublicClient({ chain, transport: http() });
 
-  const valid = await publicClient.verifySiweMessage({ message, signature });
+  const expectedDomain = req.headers.get("host") ?? undefined;
+
+  const valid = await publicClient.verifySiweMessage({
+    message,
+    signature,
+    domain: expectedDomain,
+    nonce: storedNonce,
+    time: new Date(),
+  });
   if (!valid) {
     return NextResponse.json({ error: "invalid signature" }, { status: 401 });
   }
