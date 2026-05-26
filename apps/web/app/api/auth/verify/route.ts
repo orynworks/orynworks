@@ -4,6 +4,9 @@ import { createPublicClient, http } from "viem";
 import { base, baseSepolia } from "viem/chains";
 import { parseSiweMessage } from "viem/siwe";
 import { createSessionToken } from "@/lib/session";
+import { createDbClient, upsertWalletByAddress } from "@oryn/db";
+
+const db = createDbClient(process.env.DATABASE_URL!);
 
 const chains = { [base.id]: base, [baseSepolia.id]: baseSepolia };
 
@@ -51,8 +54,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "invalid signature" }, { status: 401 });
   }
 
+  const walletRecord = await upsertWalletByAddress(
+    db,
+    siweMessage.address.toLowerCase()
+  );
+
   const token = await createSessionToken({
-    address: siweMessage.address.toLowerCase(),
+    address: walletRecord.address,
     chainId: siweMessage.chainId,
   });
 
@@ -68,7 +76,7 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({
     ok: true,
-    address: siweMessage.address.toLowerCase(),
+    address: walletRecord.address,
     chainId: siweMessage.chainId,
   });
 }
