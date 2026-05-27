@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import jwt from "@fastify/jwt";
@@ -36,4 +37,7 @@ async function main() {
   }
 }
 
-main();
+const isEntrypoint = process.argv[1] === fileURLToPath(import.meta.url);
+if (isEntrypoint) {
+  main();
+}
