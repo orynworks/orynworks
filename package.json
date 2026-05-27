@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently -n web,gateway -c cyan,magenta \"pnpm --filter @oryn/web dev\" \"pnpm --filter @oryn/gateway dev\"",
+    "predev": "pnpm --filter @oryn/db build",
+    "dev": "concurrently -n db,web,gateway -c yellow,cyan,magenta \"pnpm --filter @oryn/db dev\" \"pnpm --filter @oryn/web dev\" \"pnpm --filter @oryn/gateway dev\"",
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",
     "lint": "pnpm -r run lint",

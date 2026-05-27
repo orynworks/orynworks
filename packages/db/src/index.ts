@@ -1,3 +1,3 @@
-export * from "./schema";
-export * from "./client";
-export * from "./wallet-repo";
+export * from "./schema.js";
+export * from "./client.js";
+export * from "./wallet-repo.js";

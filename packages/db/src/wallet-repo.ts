@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import { wallet, type Wallet } from "./schema";
-import type { DbClient } from "./client";
+import { wallet, type Wallet } from "./schema.js";
+import type { DbClient } from "./client.js";
 
 export async function upsertWalletByAddress(
   db: DbClient,
