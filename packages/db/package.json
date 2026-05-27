@@ -11,7 +11,9 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
@@ -21,6 +23,7 @@
   },
   "dependencies": {
     "drizzle-orm": "^0.32.0",
+    "jose": "^6.2.3",
     "postgres": "^3.4.4"
   },
   "devDependencies": {

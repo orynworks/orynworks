@@ -1,5 +1,8 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import { verifySessionToken, type SessionPayload } from "../lib/session.js";
+import { verifySessionToken, type SessionPayload } from "@oryn/db";
+import { env } from "../env.js";
+
+const SECRET = new TextEncoder().encode(env.JWT_SECRET);
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -15,7 +18,7 @@ export async function requireAuth(req: FastifyRequest, reply: FastifyReply) {
     return;
   }
 
-  const session = await verifySessionToken(match[1]);
+  const session = await verifySessionToken(SECRET, match[1]);
   if (!session) {
     reply.code(401).send({ error: "invalid session" });
     return;

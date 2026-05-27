@@ -7,5 +7,5 @@
     "sourceMap": true,
     "noEmit": false
   },
-  "include": ["src/index.ts", "src/schema.ts", "src/client.ts", "src/wallet-repo.ts"]
+  "include": ["src/index.ts", "src/schema.ts", "src/client.ts", "src/wallet-repo.ts", "src/session.ts"]
 }

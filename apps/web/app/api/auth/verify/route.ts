@@ -3,8 +3,11 @@ import { cookies } from "next/headers";
 import { createPublicClient, http } from "viem";
 import { base, baseSepolia } from "viem/chains";
 import { parseSiweMessage } from "viem/siwe";
-import { createSessionToken } from "@/lib/session";
-import { createDbClient, upsertWalletByAddress, type DbClient } from "@oryn/db";
+import { createDbClient, createSessionToken, upsertWalletByAddress, type DbClient } from "@oryn/db";
+
+const SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET ?? "dev-only-secret-must-be-replaced-in-production-and-at-least-32-chars"
+);
 
 let _db: DbClient | undefined;
 function getDb(): DbClient {
@@ -63,7 +66,7 @@ export async function POST(req: NextRequest) {
     siweMessage.address.toLowerCase()
   );
 
-  const token = await createSessionToken({
+  const token = await createSessionToken(SECRET, {
     address: walletRecord.address,
     chainId: siweMessage.chainId,
   });
