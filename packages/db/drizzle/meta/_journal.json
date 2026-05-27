@@ -8,6 +8,13 @@
       "when": 1779837577866,
       "tag": "0000_faithful_arachne",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1779841394279,
+      "tag": "0001_petite_the_twelve",
+      "breakpoints": true
     }
   ]
 }
