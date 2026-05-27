@@ -4,9 +4,13 @@ import { createPublicClient, http } from "viem";
 import { base, baseSepolia } from "viem/chains";
 import { parseSiweMessage } from "viem/siwe";
 import { createSessionToken } from "@/lib/session";
-import { createDbClient, upsertWalletByAddress } from "@oryn/db";
+import { createDbClient, upsertWalletByAddress, type DbClient } from "@oryn/db";
 
-const db = createDbClient(process.env.DATABASE_URL!);
+let _db: DbClient | undefined;
+function getDb(): DbClient {
+  if (!_db) _db = createDbClient(process.env.DATABASE_URL!);
+  return _db;
+}
 
 const chains = { [base.id]: base, [baseSepolia.id]: baseSepolia };
 
@@ -55,7 +59,7 @@ export async function POST(req: NextRequest) {
   }
 
   const walletRecord = await upsertWalletByAddress(
-    db,
+    getDb(),
     siweMessage.address.toLowerCase()
   );
 
