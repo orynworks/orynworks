@@ -4,24 +4,26 @@
 
 ## Quick start
 
-Prerequisites: Node 20+, pnpm 9+, Docker, Foundry.
+Prerequisites: Node 20+, pnpm 9+, Foundry (for `packages/contracts`).
 
 ```bash
 # Install dependencies
 pnpm install
 
-# Copy env files
+# Set up Neon Postgres (https://neon.tech free tier)
+# Then copy env files and paste your Neon connection string:
 cp .env.example apps/gateway/.env
 cp .env.example apps/web/.env.local
-# Edit each file to set JWT_SECRET (must match between gateway and web), WalletConnect Project ID, etc.
 
-# Start Postgres
-pnpm db:up
+# Edit both files:
+# - Set DATABASE_URL to your Neon postgres connection string
+# - Set JWT_SECRET (must MATCH between gateway and web .env files)
+# - Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID (from https://cloud.walletconnect.com)
 
-# Run migrations
+# Run migrations against your Neon DB
 pnpm db:migrate
 
-# Start web + gateway in parallel
+# Start web + gateway concurrently
 pnpm dev
 ```
 
@@ -41,8 +43,7 @@ Open:
 ```bash
 pnpm dev          # Start web + gateway concurrently
 pnpm test         # Run all tests
-pnpm db:up        # Start local Postgres
-pnpm db:migrate   # Apply pending migrations
+pnpm db:migrate   # Apply pending migrations to your Neon DB
 pnpm db:studio    # Open Drizzle Studio (browse DB)
 ```
 
