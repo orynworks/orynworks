@@ -13,3 +13,8 @@ export async function upsertWalletByAddress(
   const [created] = await db.insert(wallet).values({ address: lower }).returning();
   return created;
 }
+
+export async function getWalletById(db: DbClient, id: string): Promise<Wallet | null> {
+  const result = await db.select().from(wallet).where(eq(wallet.id, id)).limit(1);
+  return result[0] ?? null;
+}
