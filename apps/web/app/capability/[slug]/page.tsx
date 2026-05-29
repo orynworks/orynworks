@@ -27,6 +27,7 @@ export default async function CapabilityDetailPage({
   const builder = await getWalletById(db, capability.builderId);
   const builderAddress = builder?.address ?? capability.builderId;
   const builderShort = `${builderAddress.slice(0, 6)}…${builderAddress.slice(-4)}`;
+  const isOwner = session?.address.toLowerCase() === builderAddress.toLowerCase();
 
   const isSkill = capability.type === "skill";
   const priceLabel =
@@ -192,7 +193,7 @@ export default async function CapabilityDetailPage({
               )}
             </div>
 
-            {session?.address === builderAddress && (
+            {isOwner && (
               <Link
                 href="/build"
                 className="block text-center border border-orange/40 text-orange px-6 py-3 font-mono text-xs uppercase tracking-widest hover:bg-orange hover:text-warmdark transition-colors"
