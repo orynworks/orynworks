@@ -1,0 +1,2 @@
+CREATE INDEX IF NOT EXISTS "idx_usage_event_capability_created" ON "usage_event" USING btree ("capability_id","created_at" desc);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "idx_usage_event_caller_created" ON "usage_event" USING btree ("caller_address","created_at" desc);
