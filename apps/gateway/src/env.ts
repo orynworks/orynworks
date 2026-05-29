@@ -6,6 +6,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url(),
   WEB_ORIGIN: z.string().url().default("http://localhost:3000"),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+  X402_CHAIN_ID: z.coerce.number().default(8453),
 });
 
 export const env = envSchema.parse(process.env);

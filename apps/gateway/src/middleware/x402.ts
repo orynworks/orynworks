@@ -4,6 +4,7 @@ import {
   type Address,
   type Hex,
 } from "viem";
+import { env } from "../env.js";
 
 export type X402Payload = {
   amountUsdc: string; // decimal string with up to 6 decimals
@@ -15,8 +16,6 @@ export type X402Payload = {
 export type X402VerifyResult =
   | { ok: true; payerAddress: Address }
   | { ok: false; status: 402; reason: string };
-
-const CHAIN_ID = 8453; // Base mainnet
 
 export async function verifyX402(
   paymentHeader: string,
@@ -54,7 +53,7 @@ export async function verifyX402(
 
   try {
     const payerAddress = await recoverTypedDataAddress({
-      domain: { name: "Oryn x402", version: "1", chainId: CHAIN_ID },
+      domain: { name: "Oryn x402", version: "1", chainId: env.X402_CHAIN_ID },
       types: {
         Payment: [
           { name: "amountUsdc", type: "string" },
