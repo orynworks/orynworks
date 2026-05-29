@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, pgEnum, numeric, boolean } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, pgEnum, numeric, boolean, integer } from "drizzle-orm/pg-core";
 
 export const walletRoleEnum = pgEnum("wallet_role", ["builder", "operator", "both"]);
 
@@ -41,3 +41,22 @@ export const capability = pgTable("capability", {
 
 export type Capability = typeof capability.$inferSelect;
 export type NewCapability = typeof capability.$inferInsert;
+
+export const usageEventTypeEnum = pgEnum("usage_event_type", ["call", "query"]);
+
+export const usageEvent = pgTable("usage_event", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  capabilityId: uuid("capability_id").notNull().references(() => capability.id),
+  callerAddress: text("caller_address").notNull(),
+  eventType: usageEventTypeEnum("event_type").notNull(),
+  requestHash: text("request_hash").notNull(),
+  success: boolean("success").notNull(),
+  latencyMs: integer("latency_ms"),
+  errorCode: text("error_code"),
+  costUsdc: numeric("cost_usdc", { precision: 10, scale: 6 }).notNull().default("0"),
+  billed: boolean("billed").notNull().default(false),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export type UsageEvent = typeof usageEvent.$inferSelect;
+export type NewUsageEvent = typeof usageEvent.$inferInsert;

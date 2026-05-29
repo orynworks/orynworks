@@ -15,6 +15,13 @@
       "when": 1779841394279,
       "tag": "0001_petite_the_twelve",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1780032250732,
+      "tag": "0002_sour_gambit",
+      "breakpoints": true
     }
   ]
 }
