@@ -1,7 +1,13 @@
 import type { FastifyPluginAsync } from "fastify";
 import { createHash } from "node:crypto";
-import { getCapabilityBySlug, recordUsageEvent } from "@oryn/db";
+import {
+  getCapabilityBySlug,
+  getWalletById,
+  recordUsageEvent,
+} from "@oryn/db";
+import type { Address } from "viem";
 import { requireAuth } from "../middleware/auth.js";
+import { verifyX402 } from "../middleware/x402.js";
 import { getDb } from "../lib/db.js";
 
 type CallBody = unknown;
@@ -19,6 +25,46 @@ export const skillsRoute: FastifyPluginAsync = async (fastify) => {
       const cap = await getCapabilityBySlug(db, slug);
       if (!cap || cap.status !== "published" || cap.type !== "skill") {
         return reply.code(404).send({ error: "skill not found" });
+      }
+
+      let payerAddress: string | undefined;
+
+      if (Number(cap.priceUsdc) > 0) {
+        const paymentHeader = req.headers["x-payment"];
+        if (!paymentHeader || typeof paymentHeader !== "string") {
+          return reply
+            .code(402)
+            .header(
+              "WWW-Authenticate",
+              `X402 realm="oryn", amount="${cap.priceUsdc}"`
+            )
+            .send({
+              error: "payment required",
+              priceUsdc: cap.priceUsdc,
+              protocol: "x402",
+              version: "1",
+            });
+        }
+
+        const builder = await getWalletById(db, cap.builderId);
+        if (!builder) {
+          return reply.code(500).send({ error: "builder not found" });
+        }
+
+        const verifyResult = await verifyX402(
+          paymentHeader,
+          cap.priceUsdc,
+          builder.address as Address
+        );
+
+        if (!verifyResult.ok) {
+          return reply.code(verifyResult.status).send({
+            error: verifyResult.reason,
+            priceUsdc: cap.priceUsdc,
+          });
+        }
+
+        payerAddress = verifyResult.payerAddress.toLowerCase();
       }
 
       const bodyString = JSON.stringify(req.body ?? {});
@@ -54,9 +100,8 @@ export const skillsRoute: FastifyPluginAsync = async (fastify) => {
       const latencyMs = Date.now() - startTime;
 
       // Record usage event (off-chain ledger).
-      // Free capabilities are auto-billed (cost 0). Paid capabilities billing=true
-      // will be set by x402 verifier in Task 5 (this task always marks billed=false
-      // for paid capabilities since payment not yet checked).
+      // Free capabilities are auto-billed (cost 0). Paid capabilities are
+      // marked billed=true when an x402 payment was verified (payerAddress set).
       await recordUsageEvent(db, {
         capabilityId: cap.id,
         callerAddress: session.address,
@@ -66,7 +111,8 @@ export const skillsRoute: FastifyPluginAsync = async (fastify) => {
         latencyMs,
         errorCode,
         costUsdc: success ? cap.priceUsdc : "0",
-        billed: Number(cap.priceUsdc) === 0 && success,
+        billed:
+          success && (Number(cap.priceUsdc) === 0 || payerAddress !== undefined),
       });
 
       if (!success) {

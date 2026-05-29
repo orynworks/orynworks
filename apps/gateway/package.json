@@ -15,6 +15,7 @@
     "@fastify/jwt": "^8.0.1",
     "@oryn/db": "workspace:*",
     "fastify": "^4.28.0",
+    "viem": "^2.51.0",
     "zod": "^3.23.0"
   },
   "devDependencies": {
