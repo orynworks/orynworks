@@ -80,6 +80,7 @@ export const skillsRoute: FastifyPluginAsync = async (fastify) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: bodyString,
+          signal: AbortSignal.timeout(30_000),
         });
 
         if (!upstream.ok) {
@@ -93,7 +94,11 @@ export const skillsRoute: FastifyPluginAsync = async (fastify) => {
           success = true;
         }
       } catch (e) {
-        errorCode = e instanceof Error ? e.message.slice(0, 100) : "fetch_failed";
+        if (e instanceof Error && (e.name === "TimeoutError" || e.name === "AbortError")) {
+          errorCode = "upstream_timeout";
+        } else {
+          errorCode = e instanceof Error ? e.message.slice(0, 100) : "fetch_failed";
+        }
         success = false;
       }
 
