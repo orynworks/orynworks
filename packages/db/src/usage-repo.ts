@@ -1,5 +1,5 @@
 import { eq, and, gte, desc, sql as drizzleSql, count, avg } from "drizzle-orm";
-import { usageEvent, type UsageEvent, type NewUsageEvent } from "./schema.js";
+import { usageEvent, capability, type UsageEvent, type NewUsageEvent } from "./schema.js";
 import type { DbClient } from "./client.js";
 
 export async function recordUsageEvent(
@@ -68,6 +68,34 @@ export async function getCapabilityRevenue(
   return rows[0]?.total ?? "0";
 }
 
+export type BuilderEarnings = {
+  grossUsdc: string;       // total operator spend across all capabilities
+  builderShareUsdc: string; // 90% of gross
+};
+
+export async function getBuilderEarnings(
+  db: DbClient,
+  builderId: string
+): Promise<BuilderEarnings> {
+  const rows = await db
+    .select({
+      total: drizzleSql<string>`COALESCE(SUM(${usageEvent.costUsdc}), 0)`,
+    })
+    .from(usageEvent)
+    .innerJoin(capability, eq(capability.id, usageEvent.capabilityId))
+    .where(
+      and(
+        eq(capability.builderId, builderId),
+        eq(usageEvent.billed, true)
+      )
+    );
+
+  const gross = rows[0]?.total ?? "0";
+  const grossNum = Number(gross);
+  const builderShare = (grossNum * 0.9).toFixed(6);
+  return { grossUsdc: gross, builderShareUsdc: builderShare };
+}
+
 export async function listRecentUsageByCapability(
   db: DbClient,
   capabilityId: string,
@@ -131,7 +159,8 @@ export type UnsettledByBuilder = {
   eventIds: string[];
 };
 
-// Aggregate billed=true, settled=false events grouped by builder
+// Aggregate billed=true, settled=false, NOT-in-progress events grouped by builder.
+// settled_tx IS NULL ensures we don't re-pick up rows that are mid-settlement.
 export async function getUnsettledByBuilder(
   db: DbClient
 ): Promise<UnsettledByBuilder[]> {
@@ -146,6 +175,7 @@ export async function getUnsettledByBuilder(
     JOIN wallet w ON w.id = c.builder_id
     WHERE ue.billed = true
       AND ue.settled = false
+      AND ue.settled_tx IS NULL
       AND ue.cost_usdc > 0
     GROUP BY w.id, w.address
     HAVING SUM(ue.cost_usdc) > 0
@@ -159,6 +189,40 @@ export async function getUnsettledByBuilder(
   }));
 }
 
+// Lock events for settlement by stamping settled_tx with a lock token.
+// Only locks rows that are still unsettled AND not already locked — this is the
+// atomic guard against two workers racing on the same batch.
+export async function lockEventsForSettle(
+  db: DbClient,
+  eventIds: string[],
+  lockToken: string
+): Promise<number> {
+  if (eventIds.length === 0) return 0;
+  const result: any = await db.execute(drizzleSql`
+    UPDATE usage_event
+    SET settled_tx = ${lockToken}
+    WHERE id = ANY(${eventIds}::uuid[])
+      AND settled = false
+      AND settled_tx IS NULL
+  `);
+  return Number(result?.rowCount ?? result?.count ?? 0);
+}
+
+// Swap a lock token for the real tx hash once broadcast succeeded.
+export async function attachTxHashToLock(
+  db: DbClient,
+  lockToken: string,
+  txHash: string
+): Promise<void> {
+  await db.execute(drizzleSql`
+    UPDATE usage_event
+    SET settled_tx = ${txHash}
+    WHERE settled_tx = ${lockToken}
+      AND settled = false
+  `);
+}
+
+// Finalize: mark events as settled once tx has succeeded on-chain.
 export async function markEventsSettled(
   db: DbClient,
   eventIds: string[],
@@ -170,4 +234,53 @@ export async function markEventsSettled(
     SET settled = true, settled_tx = ${txHash}
     WHERE id = ANY(${eventIds}::uuid[])
   `);
+}
+
+// Mark a batch as settled by their tx hash. Used for idempotent finalize.
+export async function markSettledByTxHash(
+  db: DbClient,
+  txHash: string
+): Promise<number> {
+  const result: any = await db.execute(drizzleSql`
+    UPDATE usage_event
+    SET settled = true
+    WHERE settled_tx = ${txHash}
+      AND settled = false
+  `);
+  return Number(result?.rowCount ?? result?.count ?? 0);
+}
+
+// Release a lock so events can be re-picked up by a future run.
+export async function releaseSettlementLock(
+  db: DbClient,
+  lockOrTxHash: string
+): Promise<number> {
+  const result: any = await db.execute(drizzleSql`
+    UPDATE usage_event
+    SET settled_tx = NULL
+    WHERE settled_tx = ${lockOrTxHash}
+      AND settled = false
+  `);
+  return Number(result?.rowCount ?? result?.count ?? 0);
+}
+
+// Return distinct in-progress markers (locks or tx hashes) for reconciliation.
+export type InProgressSettlement = {
+  marker: string; // either a lock token (lock:...) or a real tx hash (0x...)
+  isLock: boolean; // true if it's a lock token, false if it's a real tx hash
+};
+
+export async function getInProgressSettlements(
+  db: DbClient
+): Promise<InProgressSettlement[]> {
+  const rows = await db.execute(drizzleSql`
+    SELECT DISTINCT settled_tx
+    FROM usage_event
+    WHERE settled = false
+      AND settled_tx IS NOT NULL
+  `);
+  return (rows as any[]).map((r: any) => {
+    const marker: string = r.settled_tx;
+    return { marker, isLock: marker.startsWith("lock:") };
+  });
 }

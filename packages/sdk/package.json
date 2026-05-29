@@ -1,0 +1,37 @@
+{
+  "name": "oryn",
+  "version": "0.1.0",
+  "description": "CLI and SDK for the Oryn Works capability marketplace.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "oryn": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "oryn",
+    "ai-agents",
+    "mcp",
+    "capability",
+    "marketplace"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "@types/node": "^22.5.4"
+  }
+}

@@ -4,3 +4,4 @@ export * from "./wallet-repo.js";
 export * from "./session.js";
 export * from "./capability-repo.js";
 export * from "./usage-repo.js";
+export * from "./url-validation.js";

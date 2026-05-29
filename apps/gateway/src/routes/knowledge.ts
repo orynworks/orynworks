@@ -9,6 +9,7 @@ import type { Address } from "viem";
 import { requireAuth } from "../middleware/auth.js";
 import { verifyX402 } from "../middleware/x402.js";
 import { getDb } from "../lib/db.js";
+import { verifyProxyUrl } from "../lib/url-safety.js";
 
 type QueryBody = unknown;
 type QueryParams = { slug: string };
@@ -66,6 +67,14 @@ export const knowledgeRoute: FastifyPluginAsync = async (fastify) => {
         }
 
         payerAddress = verifyResult.payerAddress.toLowerCase();
+      }
+
+      const urlVerdict = await verifyProxyUrl(cap.hostUrl);
+      if (!urlVerdict.ok) {
+        return reply.code(502).send({
+          error: "upstream_host_blocked",
+          reason: urlVerdict.reason,
+        });
       }
 
       const bodyString = JSON.stringify(req.body ?? {});

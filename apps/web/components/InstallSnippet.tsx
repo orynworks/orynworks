@@ -7,12 +7,9 @@ type Props = {
   type: "skill" | "knowledge";
 };
 
-export function InstallSnippet({ slug, type }: Props) {
+export function InstallSnippet({ slug }: Props) {
   const [copied, setCopied] = useState(false);
-  const command =
-    type === "skill"
-      ? `npx oryn install ${slug}`
-      : `npx oryn query ${slug} "your prompt"`;
+  const command = `npx oryn install ${slug}`;
 
   async function handleCopy() {
     await navigator.clipboard.writeText(command);

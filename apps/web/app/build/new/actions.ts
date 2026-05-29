@@ -8,8 +8,10 @@ import {
   createCapability,
   getCapabilityBySlug,
   upsertWalletByAddress,
+  validateHostUrl,
 } from "@oryn/db";
 import { toSlug } from "@/lib/slug";
+import { metadataHash, verifyCapabilityOnChain } from "@/lib/chain";
 
 const FormSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters").max(80),
@@ -28,6 +30,8 @@ const FormSchema = z.object({
     .default("0"),
   tokenGated: z.string().optional(),
   requiredToken: z.string().optional(),
+  chainId: z.coerce.number().int().positive(),
+  txHash: z.string().regex(/^0x[a-fA-F0-9]{64}$/, "Invalid transaction hash"),
 });
 
 export type ActionResult =
@@ -54,13 +58,41 @@ export async function createCapabilityAction(formData: FormData): Promise<Action
 
   const db = getDb();
 
-  // Check slug uniqueness
   const existing = await getCapabilityBySlug(db, data.slug);
   if (existing) {
     return { ok: false, error: "Slug already taken", fieldErrors: { slug: "Already taken" } };
   }
 
-  // Upsert wallet to get builder id
+  const hostCheck = validateHostUrl(data.hostUrl);
+  if (!hostCheck.ok) {
+    return {
+      ok: false,
+      error: hostCheck.reason,
+      fieldErrors: { hostUrl: hostCheck.reason },
+    };
+  }
+
+  const expectedHash = metadataHash({
+    name: data.name,
+    description: data.description,
+    category: data.category,
+    hostUrl: data.hostUrl,
+  });
+
+  const verification = await verifyCapabilityOnChain({
+    chainId: data.chainId,
+    slug: data.slug,
+    expectedBuilder: session.address,
+    expectedMetadataHash: expectedHash,
+  });
+
+  if (!verification.ok) {
+    return {
+      ok: false,
+      error: `On-chain verification failed: ${verification.reason}`,
+    };
+  }
+
   const walletRecord = await upsertWalletByAddress(db, session.address);
 
   try {
@@ -76,6 +108,7 @@ export async function createCapabilityAction(formData: FormData): Promise<Action
       tokenGated: data.tokenGated === "on",
       requiredToken: data.requiredToken && data.requiredToken.length > 0 ? data.requiredToken : null,
       status: "published",
+      onchainHash: expectedHash,
     });
   } catch (e) {
     return {

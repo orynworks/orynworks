@@ -152,6 +152,15 @@ importers:
         specifier: ^5.5.0
         version: 5.9.3
 
+  packages/sdk:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.5.4
+        version: 22.7.5
+      typescript:
+        specifier: ^5.5.4
+        version: 5.9.3
+
 packages:
 
   '@adraffy/ens-normalize@1.10.1':
