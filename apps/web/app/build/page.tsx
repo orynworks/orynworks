@@ -4,14 +4,18 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { getSession } from "@/lib/get-session";
 import { getDb } from "@/lib/db";
-import { listCapabilitiesByBuilder, upsertWalletByAddress } from "@oryn/db";
+import { listCapabilitiesByBuilder, getWalletByAddress, upsertWalletByAddress } from "@oryn/db";
 
 export default async function BuildDashboardPage() {
   const session = await getSession();
   if (!session) redirect("/?error=auth_required");
 
   const db = getDb();
-  const walletRecord = await upsertWalletByAddress(db, session.address);
+  let walletRecord = await getWalletByAddress(db, session.address);
+  if (!walletRecord) {
+    // Fallback: shouldn't happen post-sign-in (verify route upserts) but safe
+    walletRecord = await upsertWalletByAddress(db, session.address);
+  }
   const myCapabilities = await listCapabilitiesByBuilder(db, walletRecord.id);
 
   return (
