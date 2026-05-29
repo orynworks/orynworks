@@ -52,6 +52,7 @@ export const skillsRoute: FastifyPluginAsync = async (fastify) => {
         }
 
         const verifyResult = await verifyX402(
+          db,
           paymentHeader,
           cap.priceUsdc,
           builder.address as Address

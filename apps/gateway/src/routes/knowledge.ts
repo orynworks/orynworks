@@ -52,6 +52,7 @@ export const knowledgeRoute: FastifyPluginAsync = async (fastify) => {
         }
 
         const verifyResult = await verifyX402(
+          db,
           paymentHeader,
           cap.priceUsdc,
           builder.address as Address

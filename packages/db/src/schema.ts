@@ -60,3 +60,11 @@ export const usageEvent = pgTable("usage_event", {
 
 export type UsageEvent = typeof usageEvent.$inferSelect;
 export type NewUsageEvent = typeof usageEvent.$inferInsert;
+
+export const x402Nonce = pgTable("x402_nonce", {
+  signature: text("signature").primaryKey(),
+  usedAt: timestamp("used_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export type X402Nonce = typeof x402Nonce.$inferSelect;
+export type NewX402Nonce = typeof x402Nonce.$inferInsert;

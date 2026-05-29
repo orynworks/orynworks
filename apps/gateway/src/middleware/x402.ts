@@ -4,6 +4,7 @@ import {
   type Address,
   type Hex,
 } from "viem";
+import { x402Nonce, type DbClient } from "@oryn/db";
 import { env } from "../env.js";
 
 export type X402Payload = {
@@ -18,6 +19,7 @@ export type X402VerifyResult =
   | { ok: false; status: 402; reason: string };
 
 export async function verifyX402(
+  db: DbClient,
   paymentHeader: string,
   expectedAmount: string,
   expectedRecipient: Address
@@ -69,6 +71,13 @@ export async function verifyX402(
       },
       signature: payload.signature,
     });
+
+    try {
+      await db.insert(x402Nonce).values({ signature: payload.signature });
+    } catch {
+      return { ok: false, status: 402, reason: "signature already used" };
+    }
+
     return { ok: true, payerAddress };
   } catch (e) {
     return {
