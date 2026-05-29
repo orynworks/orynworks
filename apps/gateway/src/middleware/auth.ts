@@ -11,14 +11,18 @@ declare module "fastify" {
 }
 
 export async function requireAuth(req: FastifyRequest, reply: FastifyReply) {
-  const cookie = req.headers.cookie ?? "";
-  const match = cookie.match(/oryn_session=([^;]+)/);
-  if (!match) {
+  const cookieMatch = (req.headers.cookie ?? "").match(/oryn_session=([^;]+)/);
+  const authHeader = req.headers.authorization;
+  const bearerMatch =
+    typeof authHeader === "string" ? authHeader.match(/^Bearer (.+)$/) : null;
+  const token = cookieMatch?.[1] ?? bearerMatch?.[1];
+
+  if (!token) {
     reply.code(401).send({ error: "no session" });
     return;
   }
 
-  const session = await verifySessionToken(SECRET, match[1]);
+  const session = await verifySessionToken(SECRET, token);
   if (!session) {
     reply.code(401).send({ error: "invalid session" });
     return;
