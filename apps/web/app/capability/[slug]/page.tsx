@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { InstallSnippet } from "@/components/InstallSnippet";
 import { getSession } from "@/lib/get-session";
 import { getDb } from "@/lib/db";
-import { getCapabilityBySlug, getWalletById } from "@oryn/db";
+import { getCapabilityBySlug, getUsageStats, getWalletById } from "@oryn/db";
 
 type RouteParams = Promise<{ slug: string }>;
 
@@ -23,6 +23,9 @@ export default async function CapabilityDetailPage({
   if (!capability || capability.status !== "published") {
     notFound();
   }
+
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const stats = await getUsageStats(db, capability.id, sevenDaysAgo);
 
   const builder = await getWalletById(db, capability.builderId);
   const builderAddress = builder?.address ?? capability.builderId;
@@ -105,26 +108,38 @@ export default async function CapabilityDetailPage({
               </h2>
               <div className="grid grid-cols-3 gap-3 text-center">
                 <div className="border border-cream/10 px-4 py-5">
-                  <div className="font-serif text-2xl text-cream">—</div>
+                  <div className="font-serif text-2xl text-cream">
+                    {stats.totalCalls === 0 ? "—" : stats.totalCalls}
+                  </div>
                   <div className="text-[10px] font-mono uppercase tracking-wider text-cream/40 mt-1">
                     Calls
                   </div>
                 </div>
                 <div className="border border-cream/10 px-4 py-5">
-                  <div className="font-serif text-2xl text-cream">—</div>
+                  <div className="font-serif text-2xl text-cream">
+                    {stats.totalCalls === 0
+                      ? "—"
+                      : `${(stats.successRate * 100).toFixed(0)}%`}
+                  </div>
                   <div className="text-[10px] font-mono uppercase tracking-wider text-cream/40 mt-1">
                     Success
                   </div>
                 </div>
                 <div className="border border-cream/10 px-4 py-5">
-                  <div className="font-serif text-2xl text-cream">—</div>
+                  <div className="font-serif text-2xl text-cream">
+                    {stats.avgLatencyMs === null
+                      ? "—"
+                      : `${Math.round(stats.avgLatencyMs)} ms`}
+                  </div>
                   <div className="text-[10px] font-mono uppercase tracking-wider text-cream/40 mt-1">
                     Avg latency
                   </div>
                 </div>
               </div>
               <p className="text-xs text-cream/40 mt-2 font-mono">
-                Stats arrive after first calls (Plan 1C).
+                {stats.totalCalls === 0
+                  ? "No usage yet."
+                  : "Last 7 days · Updated in real-time."}
               </p>
             </section>
           </div>
