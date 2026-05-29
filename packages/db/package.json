@@ -19,6 +19,7 @@
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
     "generate": "drizzle-kit generate",
     "migrate": "tsx src/migrate.ts",
+    "seed": "tsx src/seed.ts",
     "studio": "drizzle-kit studio"
   },
   "dependencies": {
