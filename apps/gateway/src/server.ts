@@ -22,6 +22,14 @@ export async function buildServer() {
     secret: env.JWT_SECRET,
   });
 
+  await fastify.register(import("@fastify/rate-limit"), {
+    max: 60,
+    timeWindow: "1 minute",
+    keyGenerator: (req) => {
+      return (req as any).session?.address ?? req.ip;
+    },
+  });
+
   await fastify.register(healthRoute);
   await fastify.register(meRoute);
   await fastify.register(skillsRoute);
