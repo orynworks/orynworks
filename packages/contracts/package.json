@@ -5,6 +5,8 @@
   "scripts": {
     "build": "forge build",
     "test": "forge test",
-    "fmt": "forge fmt"
+    "fmt": "forge fmt",
+    "deploy:sepolia": "forge script script/Deploy.s.sol --rpc-url ${BASE_SEPOLIA_RPC:-https://sepolia.base.org} --broadcast --verify --etherscan-api-key $BASESCAN_API_KEY",
+    "deploy:mainnet": "forge script script/Deploy.s.sol --rpc-url ${BASE_RPC:-https://mainnet.base.org} --broadcast --verify --etherscan-api-key $BASESCAN_API_KEY"
   }
 }
