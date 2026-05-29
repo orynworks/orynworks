@@ -123,3 +123,51 @@ export async function getOperatorTotalCalls(
     .where(eq(usageEvent.callerAddress, callerAddress.toLowerCase()));
   return Number(rows[0]?.total ?? 0);
 }
+
+export type UnsettledByBuilder = {
+  builderId: string;
+  builderAddress: string;
+  totalUsdc: string;
+  eventIds: string[];
+};
+
+// Aggregate billed=true, settled=false events grouped by builder
+export async function getUnsettledByBuilder(
+  db: DbClient
+): Promise<UnsettledByBuilder[]> {
+  const rows = await db.execute(drizzleSql`
+    SELECT
+      w.id as builder_id,
+      w.address as builder_address,
+      COALESCE(SUM(ue.cost_usdc), 0)::text as total_usdc,
+      ARRAY_AGG(ue.id::text) as event_ids
+    FROM usage_event ue
+    JOIN capability c ON c.id = ue.capability_id
+    JOIN wallet w ON w.id = c.builder_id
+    WHERE ue.billed = true
+      AND ue.settled = false
+      AND ue.cost_usdc > 0
+    GROUP BY w.id, w.address
+    HAVING SUM(ue.cost_usdc) > 0
+  `);
+
+  return (rows as any[]).map((r: any) => ({
+    builderId: r.builder_id,
+    builderAddress: r.builder_address,
+    totalUsdc: r.total_usdc,
+    eventIds: r.event_ids,
+  }));
+}
+
+export async function markEventsSettled(
+  db: DbClient,
+  eventIds: string[],
+  txHash: string
+): Promise<void> {
+  if (eventIds.length === 0) return;
+  await db.execute(drizzleSql`
+    UPDATE usage_event
+    SET settled = true, settled_tx = ${txHash}
+    WHERE id = ANY(${eventIds}::uuid[])
+  `);
+}

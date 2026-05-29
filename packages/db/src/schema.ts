@@ -56,6 +56,8 @@ export const usageEvent = pgTable("usage_event", {
   errorCode: text("error_code"),
   costUsdc: numeric("cost_usdc", { precision: 10, scale: 6 }).notNull().default("0"),
   billed: boolean("billed").notNull().default(false),
+  settled: boolean("settled").notNull().default(false),
+  settledTx: text("settled_tx"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 }, (t) => ({
   capabilityCreatedIdx: index("idx_usage_event_capability_created").on(t.capabilityId, desc(t.createdAt)),
