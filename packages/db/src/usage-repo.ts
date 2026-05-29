@@ -112,3 +112,14 @@ export async function getOperatorSpending(
 
   return rows[0]?.total ?? "0";
 }
+
+export async function getOperatorTotalCalls(
+  db: DbClient,
+  callerAddress: string
+): Promise<number> {
+  const rows = await db
+    .select({ total: count() })
+    .from(usageEvent)
+    .where(eq(usageEvent.callerAddress, callerAddress.toLowerCase()));
+  return Number(rows[0]?.total ?? 0);
+}

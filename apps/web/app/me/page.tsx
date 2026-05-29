@@ -6,6 +6,7 @@ import { getSession } from "@/lib/get-session";
 import { getDb } from "@/lib/db";
 import {
   getOperatorSpending,
+  getOperatorTotalCalls,
   listRecentUsageByCaller,
   listCapabilitySummariesByIds,
 } from "@oryn/db";
@@ -18,8 +19,9 @@ export default async function MePage() {
   }
 
   const db = getDb();
-  const [spending, usageEvents] = await Promise.all([
+  const [spending, totalCalls, usageEvents] = await Promise.all([
     getOperatorSpending(db, session.address),
+    getOperatorTotalCalls(db, session.address),
     listRecentUsageByCaller(db, session.address, 10),
   ]);
 
@@ -51,7 +53,7 @@ export default async function MePage() {
         {/* Spending */}
         <div className="grid grid-cols-2 gap-3 mb-10 max-w-md">
           <Stat label="Spent (USDC)" value={Number(spending).toFixed(4)} />
-          <Stat label="Calls" value={usageEvents.length} />
+          <Stat label="Calls" value={totalCalls} />
         </div>
 
         {/* Recent activity */}
