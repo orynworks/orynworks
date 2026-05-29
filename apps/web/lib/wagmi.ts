@@ -12,13 +12,17 @@ if (!projectId) {
   );
 }
 
+const baseRpc = process.env.NEXT_PUBLIC_BASE_RPC_URL || "https://mainnet.base.org";
+const baseSepoliaRpc =
+  process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL || "https://sepolia.base.org";
+
 export const wagmiConfig = getDefaultConfig({
   appName: "Oryn Works",
   projectId: projectId ?? "missing-project-id",
   chains: [base, baseSepolia],
   transports: {
-    [base.id]: http(),
-    [baseSepolia.id]: http(),
+    [base.id]: http(baseRpc),
+    [baseSepolia.id]: http(baseSepoliaRpc),
   },
   ssr: true,
 });

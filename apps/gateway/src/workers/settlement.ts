@@ -73,8 +73,15 @@ export async function runSettlement(config: SettlementConfig): Promise<{
   const account = privateKeyToAccount(config.privateKey);
   const chain = config.chainId === 84532 ? baseSepolia : base;
 
-  const publicClient = createPublicClient({ chain, transport: http() });
-  const walletClient = createWalletClient({ account, chain, transport: http() });
+  // Default to official Coinbase Base RPCs (more reliable for recent blocks
+  // than viem's bundled fallback). Override via env if you have a paid RPC.
+  const rpcUrl =
+    config.chainId === 84532
+      ? process.env.BASE_SEPOLIA_RPC_URL || "https://sepolia.base.org"
+      : process.env.BASE_RPC_URL || "https://mainnet.base.org";
+
+  const publicClient = createPublicClient({ chain, transport: http(rpcUrl) });
+  const walletClient = createWalletClient({ account, chain, transport: http(rpcUrl) });
 
   // Phase A: reconciliation of any in-progress markers from prior runs.
   const reconciled = await reconcileInProgress(db, publicClient);

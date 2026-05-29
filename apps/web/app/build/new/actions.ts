@@ -84,6 +84,7 @@ export async function createCapabilityAction(formData: FormData): Promise<Action
     slug: data.slug,
     expectedBuilder: session.address,
     expectedMetadataHash: expectedHash,
+    txHash: data.txHash as `0x${string}`,
   });
 
   if (!verification.ok) {
