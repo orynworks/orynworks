@@ -10,7 +10,7 @@ if (!databaseUrl) {
 }
 
 // Recognizable seed builder address (DO NOT use a real wallet)
-const SEED_BUILDER_ADDRESS = "0x0000000000000000000000000000000000seed01";
+const SEED_BUILDER_ADDRESS = "0x000000000000000000000000000000000000d0ed";
 
 type SeedCapability = Omit<NewCapability, "builderId">;
 
