@@ -1,4 +1,4 @@
-import { eq, and, desc, ilike, or } from "drizzle-orm";
+import { eq, and, desc, ilike, or, inArray } from "drizzle-orm";
 import { capability, type Capability, type NewCapability } from "./schema.js";
 import type { DbClient } from "./client.js";
 
@@ -63,6 +63,27 @@ export async function listCapabilitiesByBuilder(
     .from(capability)
     .where(eq(capability.builderId, builderId))
     .orderBy(desc(capability.createdAt));
+}
+
+export type CapabilitySummary = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
+export async function listCapabilitySummariesByIds(
+  db: DbClient,
+  ids: string[]
+): Promise<CapabilitySummary[]> {
+  if (ids.length === 0) return [];
+  return db
+    .select({
+      id: capability.id,
+      name: capability.name,
+      slug: capability.slug,
+    })
+    .from(capability)
+    .where(inArray(capability.id, ids));
 }
 
 export async function listFeaturedCapabilities(
