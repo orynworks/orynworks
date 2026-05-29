@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { EarningsCard } from "@/components/EarningsCard";
 import { getSession } from "@/lib/get-session";
 import { getDb } from "@/lib/db";
 import {
@@ -10,11 +10,38 @@ import {
   upsertWalletByAddress,
   getCapabilityRevenue,
   getUsageStats,
+  getBuilderEarnings,
 } from "@oryn/db";
 
 export default async function BuildDashboardPage() {
   const session = await getSession();
-  if (!session) redirect("/?error=auth_required");
+
+  if (!session) {
+    return (
+      <main className="min-h-screen flex flex-col">
+        <Header showDashboardLink={false} />
+        <section className="flex-1 flex items-center justify-center px-6 py-20">
+          <div className="text-center max-w-md">
+            <p className="text-xs tracking-[0.3em] text-cream/60 uppercase mb-3 font-mono">
+              Build
+            </p>
+            <h1 className="font-serif text-4xl mb-4">Sign in to publish.</h1>
+            <p className="text-cream/60 text-sm mb-8">
+              Connect your wallet and sign in to manage your capabilities, view revenue,
+              and publish new skills or knowledge packs.
+            </p>
+            <Link
+              href="/"
+              className="inline-block bg-orange text-warmdark px-6 py-3 font-mono text-xs uppercase tracking-widest hover:bg-orange-light transition-colors"
+            >
+              ← Back to home
+            </Link>
+          </div>
+        </section>
+        <Footer />
+      </main>
+    );
+  }
 
   const db = getDb();
   let walletRecord = await getWalletByAddress(db, session.address);
@@ -23,6 +50,7 @@ export default async function BuildDashboardPage() {
     walletRecord = await upsertWalletByAddress(db, session.address);
   }
   const myCapabilities = await listCapabilitiesByBuilder(db, walletRecord.id);
+  const earnings = await getBuilderEarnings(db, walletRecord.id);
 
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   const capsWithStats = await Promise.all(
@@ -39,7 +67,7 @@ export default async function BuildDashboardPage() {
     <main className="min-h-screen flex flex-col">
       <Header showDashboardLink />
       <section className="flex-1 px-6 py-12 max-w-5xl mx-auto w-full">
-        <div className="flex items-baseline justify-between mb-10">
+        <div className="flex items-baseline justify-between mb-8">
           <div>
             <p className="text-xs tracking-[0.3em] text-cream/60 uppercase mb-3 font-mono">
               Build
@@ -53,6 +81,10 @@ export default async function BuildDashboardPage() {
             + Publish new
           </Link>
         </div>
+
+        {capsWithStats.length > 0 && (
+          <EarningsCard lifetimeBuilderShareUsdc={earnings.builderShareUsdc} />
+        )}
 
         {capsWithStats.length === 0 ? (
           <div className="border border-cream/10 px-8 py-16 text-center">

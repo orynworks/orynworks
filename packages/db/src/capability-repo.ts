@@ -1,4 +1,4 @@
-import { eq, and, desc, ilike, or, inArray } from "drizzle-orm";
+import { eq, and, desc, ilike, or, inArray, count, countDistinct } from "drizzle-orm";
 import { capability, type Capability, type NewCapability } from "./schema.js";
 import type { DbClient } from "./client.js";
 
@@ -84,6 +84,42 @@ export async function listCapabilitySummariesByIds(
     })
     .from(capability)
     .where(inArray(capability.id, ids));
+}
+
+export type LandingStats = {
+  totalCapabilities: number;
+  totalBuilders: number;
+  totalSkills: number;
+  totalKnowledge: number;
+};
+
+export async function getLandingStats(db: DbClient): Promise<LandingStats> {
+  const rows = await db
+    .select({
+      totalCapabilities: count(),
+      totalBuilders: countDistinct(capability.builderId),
+    })
+    .from(capability)
+    .where(eq(capability.status, "published"));
+
+  const byType = await db
+    .select({
+      type: capability.type,
+      count: count(),
+    })
+    .from(capability)
+    .where(eq(capability.status, "published"))
+    .groupBy(capability.type);
+
+  const skills = byType.find((r) => r.type === "skill")?.count ?? 0;
+  const knowledge = byType.find((r) => r.type === "knowledge")?.count ?? 0;
+
+  return {
+    totalCapabilities: Number(rows[0]?.totalCapabilities ?? 0),
+    totalBuilders: Number(rows[0]?.totalBuilders ?? 0),
+    totalSkills: Number(skills),
+    totalKnowledge: Number(knowledge),
+  };
 }
 
 export async function listFeaturedCapabilities(

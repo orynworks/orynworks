@@ -42,7 +42,7 @@ export default async function BrowsePage({
           </p>
           <h1 className="font-serif text-4xl mb-3">Capabilities</h1>
           <p className="text-cream/60 max-w-xl">
-            Discover skills and knowledge packs for AI agents — discovered, installed, attested.
+            Skills and knowledge packs to extend your AI agent.
           </p>
         </div>
 
@@ -55,7 +55,7 @@ export default async function BrowsePage({
             <div className="border border-cream/10 px-8 py-16 text-center">
               <p className="text-cream/60 mb-2">No capabilities match these filters.</p>
               <p className="text-cream/40 text-sm">
-                Try a different category or search term — or be the first to{" "}
+                Try a different category or search term, or be the first to{" "}
                 <a href="/build/new" className="text-orange hover:underline">
                   publish one
                 </a>

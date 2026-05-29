@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { getSession } from "@/lib/get-session";
@@ -15,7 +14,30 @@ export default async function MePage() {
   const session = await getSession();
 
   if (!session) {
-    redirect("/?error=auth_required");
+    return (
+      <main className="min-h-screen flex flex-col">
+        <Header showDashboardLink={false} />
+        <section className="flex-1 flex items-center justify-center px-6 py-20">
+          <div className="text-center max-w-md">
+            <p className="text-xs tracking-[0.3em] text-cream/60 uppercase mb-3 font-mono">
+              Profile
+            </p>
+            <h1 className="font-serif text-4xl mb-4">Sign in to continue.</h1>
+            <p className="text-cream/60 text-sm mb-8">
+              Connect your wallet and sign in to see your spending, recent calls, and
+              installed capabilities.
+            </p>
+            <Link
+              href="/"
+              className="inline-block bg-orange text-warmdark px-6 py-3 font-mono text-xs uppercase tracking-widest hover:bg-orange-light transition-colors"
+            >
+              ← Back to home
+            </Link>
+          </div>
+        </section>
+        <Footer />
+      </main>
+    );
   }
 
   const db = getDb();

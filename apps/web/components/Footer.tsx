@@ -5,17 +5,17 @@ export function Footer() {
   return (
     <footer className="border-t border-cream/10 px-6 py-10 mt-12">
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-start justify-between gap-8">
-        <div className="flex items-start gap-3">
-          <Logo size={32} className="text-cream" />
-          <div>
-            <p className="font-serif text-lg">oryn</p>
+        <div className="flex items-start gap-0">
+          <Logo size={52} className="text-cream" />
+          <div className="-ml-1">
+            <p className="font-serif text-lg">orynworks</p>
             <p className="text-xs text-cream/50 font-mono tracking-wider mt-1">
               the capability marketplace for AI agents.
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-8 text-xs font-mono uppercase tracking-wider">
+        <div className="grid grid-cols-2 gap-10 text-xs font-mono uppercase tracking-wider">
           <div>
             <p className="text-cream/40 mb-3">Product</p>
             <ul className="space-y-2">
@@ -27,15 +27,8 @@ export function Footer() {
           <div>
             <p className="text-cream/40 mb-3">Community</p>
             <ul className="space-y-2">
-              <li><a href="https://twitter.com/orynworks" target="_blank" rel="noreferrer" className="text-cream/70 hover:text-orange">Twitter</a></li>
+              <li><a href="https://x.com/orynworks" target="_blank" rel="noreferrer" className="text-cream/70 hover:text-orange">Twitter</a></li>
               <li><a href="https://github.com/orynworks" target="_blank" rel="noreferrer" className="text-cream/70 hover:text-orange">GitHub</a></li>
-            </ul>
-          </div>
-          <div>
-            <p className="text-cream/40 mb-3">Network</p>
-            <ul className="space-y-2">
-              <li className="text-cream/70">On Base</li>
-              <li className="text-cream/70">USDC-native</li>
             </ul>
           </div>
         </div>

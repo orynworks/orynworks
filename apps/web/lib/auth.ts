@@ -16,7 +16,7 @@ export function buildSiweMessage(args: {
     chainId: args.chainId,
     domain: window.location.host,
     uri: window.location.origin,
-    statement: "Sign in to Oryn Works — the capability marketplace for AI agents.",
+    statement: "Sign in to Oryn Works, the capability marketplace for AI agents.",
     nonce: args.nonce,
     version: "1",
     issuedAt: new Date(),

@@ -138,14 +138,14 @@ Tasks:
 
 **Goal:** Become infrastructure for the agent economy.
 
-- Aeon official integration (sync `skill-packs.json` mirror)
+- Partner framework integrations (Claude Desktop, Cursor, OpenAgents)
 - `@oryn/sdk` npm package
 - CLI: `npx oryn install <slug>` (one-line install to Claude Desktop/Cursor)
 - Discord bot for community
 - Public API + docs site
 - Builder grants program
 
-**Success metric:** 50+ capabilities listed, 10+ active builders earning USDC, mention in Aeon ecosystem map.
+**Success metric:** 50+ capabilities listed, 10+ active builders earning revenue, established presence in the agent ecosystem.
 
 ---
 

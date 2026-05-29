@@ -98,7 +98,7 @@ export default async function CapabilityDetailPage({
               </h2>
               <InstallSnippet slug={capability.slug} type={capability.type} />
               <p className="text-xs text-cream/40 mt-2 font-mono">
-                Requires <code>@oryn/sdk</code> — coming in Phase 5.
+                Requires <code>@oryn/sdk</code>. Coming soon.
               </p>
             </section>
 
