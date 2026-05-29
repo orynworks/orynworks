@@ -104,7 +104,7 @@ export const skillsRoute: FastifyPluginAsync = async (fastify) => {
       // marked billed=true when an x402 payment was verified (payerAddress set).
       await recordUsageEvent(db, {
         capabilityId: cap.id,
-        callerAddress: session.address,
+        callerAddress: session.address.toLowerCase(),
         eventType: "call",
         requestHash,
         success,
