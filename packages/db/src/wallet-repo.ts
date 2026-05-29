@@ -18,3 +18,9 @@ export async function getWalletById(db: DbClient, id: string): Promise<Wallet | 
   const result = await db.select().from(wallet).where(eq(wallet.id, id)).limit(1);
   return result[0] ?? null;
 }
+
+export async function getWalletByAddress(db: DbClient, address: string): Promise<Wallet | null> {
+  const lower = address.toLowerCase();
+  const result = await db.select().from(wallet).where(eq(wallet.address, lower)).limit(1);
+  return result[0] ?? null;
+}
