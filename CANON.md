@@ -236,7 +236,7 @@ Each successful paid call emits an on-chain attestation event. Each attestation 
 | Surface | Line |
 |---|---|
 | H1 | The capability marketplace for AI agents. |
-| Subtitle | Builders publish skills and knowledge packs. Operators install them with one command. Payments settle automatically, and reputation lives on-chain. |
+| Subtitle | The settlement layer for AI agent capabilities. Builders publish skills and knowledge. Operators install with a single command. On-chain reputation that compounds. |
 | Footer tagline | the capability marketplace for AI agents. |
 | One-liner pitch | Agents make calls. Calls need capabilities. Capabilities need a market — with discovery, payment, and trust. That's Oryn Works. |
 

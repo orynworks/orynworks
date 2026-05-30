@@ -24,7 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Oryn Works · Capability marketplace for AI agents",
   description:
-    "Builders publish skills and knowledge packs. Operators install them with one command. Pay per use, with on-chain reputation.",
+    "The settlement layer for AI agent capabilities. Builders publish skills and knowledge. Operators install with a single command. On-chain reputation that compounds.",
   metadataBase: new URL("https://oryn.works"),
 };
 

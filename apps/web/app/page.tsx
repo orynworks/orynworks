@@ -29,9 +29,9 @@ export default async function HomePage() {
             <span className="text-orange">for AI agents.</span>
           </h1>
           <p className="text-cream/70 text-base md:text-lg mb-8 max-w-xl mx-auto leading-relaxed">
-            Builders publish skills and knowledge packs. Operators install them
-            with one command. Payments settle automatically, and reputation
-            lives on-chain.
+            The settlement layer for AI agent capabilities. Builders publish
+            skills and knowledge. Operators install with a single command.
+            On-chain reputation that compounds.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
