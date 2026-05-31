@@ -70,7 +70,7 @@ export default async function DocsPage() {
             <span className="w-1 h-1 rounded-full bg-orange" />
             Documentation
           </p>
-          <h1 className="font-serif text-5xl md:text-7xl tracking-tight mb-5 leading-[1.05]">
+          <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl tracking-tight mb-5 leading-[1.05]">
             Build with <span className="text-orange italic">Oryn</span>
             <span className="text-cream/40">.</span>
           </h1>
@@ -97,7 +97,7 @@ export default async function DocsPage() {
       </section>
 
       {/* Body */}
-      <section className="max-w-7xl mx-auto w-full px-6 pb-24 flex-1 grid grid-cols-1 lg:grid-cols-[1fr_220px] gap-10">
+      <section className="max-w-7xl mx-auto w-full px-6 pb-24 flex-1 grid grid-cols-1 lg:grid-cols-[1fr_220px] gap-6 md:gap-10">
         <article className="min-w-0 order-2 lg:order-1">
           <Section
             id="quickstart"

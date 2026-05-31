@@ -11,6 +11,7 @@ import { getDb } from "@/lib/db";
 import {
   listPublishedCapabilities,
   countPublishedCapabilities,
+  type ListFilters,
   type SortMode,
   type PriceFilter,
 } from "@oryn/db";
@@ -56,7 +57,7 @@ export default async function BrowsePage({
   const page = parsePage(params.page);
   const offset = (page - 1) * PAGE_SIZE;
 
-  const queryFilters = {
+  const queryFilters: ListFilters = {
     type: typeFilter,
     category: params.category || undefined,
     search: params.q || undefined,
@@ -102,7 +103,7 @@ export default async function BrowsePage({
           <div className="mb-4">
             <EyebrowChip>Browse</EyebrowChip>
           </div>
-          <h1 className="font-serif text-4xl mb-3">Capabilities</h1>
+          <h1 className="font-serif text-3xl md:text-4xl mb-3">Capabilities</h1>
           <p className="text-cream/60 max-w-xl">
             Skills and knowledge packs to extend your AI agent.
           </p>
@@ -143,7 +144,7 @@ export default async function BrowsePage({
               </div>
 
               {totalPages > 1 && (
-                <div className="flex items-center justify-center gap-2 mt-10">
+                <div className="flex flex-wrap items-center justify-center gap-2 mt-10">
                   {safePage > 1 ? (
                     <Link
                       href={buildPageUrl(safePage - 1)}

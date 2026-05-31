@@ -64,7 +64,7 @@ export function BrowseFilters() {
   return (
     <div className="space-y-4">
       {/* Type tabs */}
-      <div className="flex items-center gap-1 border-b border-cream/10">
+      <div className="flex flex-wrap items-center gap-1 border-b border-cream/10">
         {[
           { value: "", label: "All" },
           { value: "skill", label: "Skills" },
@@ -93,7 +93,7 @@ export function BrowseFilters() {
       </div>
 
       {/* Sort + Price + Category + Search */}
-      <div className="grid grid-cols-1 sm:grid-cols-[auto_auto_auto_1fr] gap-3 items-stretch">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[auto_auto_auto_1fr] gap-3 items-stretch">
         <select
           value={currentSort}
           onChange={(e) => updateParams({ sort: e.target.value || null })}
@@ -107,14 +107,14 @@ export function BrowseFilters() {
         </select>
 
         {/* Price segmented */}
-        <div className="flex items-stretch border border-cream/15 bg-warmdark-light">
+        <div className="flex items-stretch border border-cream/15 bg-warmdark-light overflow-hidden">
           {PRICES.map((p) => {
             const active = currentPrice === p.value;
             return (
               <button
                 key={p.value}
                 onClick={() => updateParams({ price: p.value || null })}
-                className={`px-3 py-2 text-[11px] font-mono uppercase tracking-wider transition-colors ${
+                className={`flex-1 px-3 py-2 text-[11px] font-mono uppercase tracking-wider transition-colors ${
                   active
                     ? "bg-orange text-warmdark"
                     : "text-cream/60 hover:text-cream"

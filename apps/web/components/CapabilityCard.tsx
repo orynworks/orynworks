@@ -29,7 +29,7 @@ export function CapabilityCard({ capability }: { capability: Capability }) {
           </span>
         )}
       </div>
-      <h3 className="font-serif text-xl mb-2 group-hover:text-orange transition-colors pr-12">
+      <h3 className="font-serif text-lg sm:text-xl mb-2 group-hover:text-orange transition-colors pr-12">
         {capability.name}
       </h3>
       <p className="text-sm text-cream/60 line-clamp-2 mb-4 min-h-[2.5rem]">

@@ -74,7 +74,7 @@ export function ConnectButton({ isSignedIn = false }: ConnectButtonProps) {
           return (
             <button
               onClick={openConnectModal}
-              className="border border-cream/30 text-cream/70 hover:border-orange hover:text-orange px-3 py-2 font-mono text-xs uppercase tracking-wider transition-colors"
+              className="border border-cream/30 text-cream/70 hover:border-orange hover:text-orange px-2 sm:px-3 py-2 font-mono text-[10px] sm:text-xs uppercase tracking-wider transition-colors"
             >
               Sign In
             </button>
@@ -90,7 +90,7 @@ export function ConnectButton({ isSignedIn = false }: ConnectButtonProps) {
               <button
                 onClick={() => handleSignIn(account.address as `0x${string}`)}
                 disabled={busy}
-                className="bg-orange text-warmdark px-4 py-2 font-mono text-xs uppercase tracking-widest hover:bg-orange-light transition-colors disabled:opacity-50"
+                className="bg-orange text-warmdark px-3 sm:px-4 py-2 font-mono text-[10px] sm:text-xs uppercase tracking-widest hover:bg-orange-light transition-colors disabled:opacity-50"
               >
                 {busy ? "Signing…" : "Sign In"}
               </button>
@@ -105,14 +105,14 @@ export function ConnectButton({ isSignedIn = false }: ConnectButtonProps) {
           <div className="relative" ref={menuRef}>
             <button
               onClick={() => setMenuOpen((v) => !v)}
-              className="flex items-center gap-2 border border-cream/20 hover:border-orange transition-colors px-3 py-2 font-mono text-xs uppercase tracking-wider text-cream/80"
+              className="flex items-center gap-2 border border-cream/20 hover:border-orange transition-colors px-2 sm:px-3 py-2 font-mono text-[10px] sm:text-xs uppercase tracking-wider text-cream/80"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-orange" />
               {shorten(account.address)}
               <span className="text-cream/40 ml-1">▾</span>
             </button>
             {menuOpen && (
-              <div className="absolute right-0 top-full mt-2 bg-warmdark-light border border-cream/10 min-w-[200px] z-50 shadow-xl">
+              <div className="absolute right-0 top-full mt-2 bg-warmdark-light border border-cream/10 w-[calc(100vw-2rem)] sm:w-auto sm:min-w-[200px] max-w-xs z-50 shadow-xl">
                 <Link
                   href="/me"
                   onClick={() => setMenuOpen(false)}

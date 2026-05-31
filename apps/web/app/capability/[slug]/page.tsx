@@ -46,7 +46,7 @@ export default async function CapabilityDetailPage({
 
       <section className="flex-1 px-6 py-12 max-w-6xl mx-auto w-full">
         {/* Breadcrumb */}
-        <nav className="text-xs font-mono uppercase tracking-wider text-cream/40 mb-8">
+        <nav className="flex flex-wrap text-xs font-mono uppercase tracking-wider text-cream/40 mb-8">
           <Link href="/browse" className="hover:text-orange">Browse</Link>
           <span className="mx-2">/</span>
           <span>{capability.category}</span>
@@ -54,7 +54,7 @@ export default async function CapabilityDetailPage({
           <span className="text-cream/70">{capability.name}</span>
         </nav>
 
-        <div className="grid lg:grid-cols-3 gap-10">
+        <div className="grid lg:grid-cols-3 gap-6 md:gap-10">
           {/* Main content */}
           <div className="lg:col-span-2 space-y-8">
             <header>
@@ -77,7 +77,7 @@ export default async function CapabilityDetailPage({
                   </span>
                 )}
               </div>
-              <h1 className="font-serif text-5xl leading-tight mb-3">
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl leading-tight mb-3">
                 {capability.name}
               </h1>
               <p className="text-sm font-mono text-cream/50">
@@ -108,7 +108,7 @@ export default async function CapabilityDetailPage({
               <h2 className="text-xs tracking-[0.3em] text-cream/60 uppercase mb-4 font-mono">
                 Usage (last 7d)
               </h2>
-              <div className="grid grid-cols-3 gap-3 text-center">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
                 <div className="border border-cream/10 px-4 py-5">
                   <div className="font-serif text-2xl text-cream">
                     {stats.totalCalls === 0 ? "—" : stats.totalCalls}

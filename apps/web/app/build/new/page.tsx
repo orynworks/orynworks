@@ -44,7 +44,7 @@ export default async function NewCapabilityPage() {
         <div className="mb-3">
           <EyebrowChip>Build</EyebrowChip>
         </div>
-        <h1 className="font-serif text-4xl mb-2">Publish a capability</h1>
+        <h1 className="font-serif text-3xl sm:text-4xl mb-2">Publish a capability</h1>
         <p className="text-cream/60 mb-10">
           Skill (MCP server) or Knowledge pack. Builders earn USDC per call.
         </p>

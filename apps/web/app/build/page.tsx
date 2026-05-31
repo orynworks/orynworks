@@ -71,7 +71,7 @@ export default async function BuildDashboardPage() {
       <Header showDashboardLink />
       <StatusBar />
       <section className="flex-1 px-6 py-12 max-w-5xl mx-auto w-full">
-        <div className="flex items-baseline justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-3 sm:gap-0 mb-8">
           <div>
             <div className="mb-3">
               <EyebrowChip>Build</EyebrowChip>
@@ -80,7 +80,7 @@ export default async function BuildDashboardPage() {
           </div>
           <Link
             href="/build/new"
-            className="bg-orange text-warmdark px-6 py-3 font-mono text-xs uppercase tracking-widest hover:bg-orange-light transition-colors"
+            className="w-full sm:w-auto text-center bg-orange text-warmdark px-6 py-3 font-mono text-xs uppercase tracking-widest hover:bg-orange-light transition-colors"
           >
             + Publish new
           </Link>
@@ -101,7 +101,7 @@ export default async function BuildDashboardPage() {
           <ul className="space-y-3">
             {capsWithStats.map((cap) => (
               <li key={cap.id} className="border border-cream/10 px-5 py-4">
-                <div className="flex items-baseline justify-between mb-3">
+                <div className="flex items-baseline justify-between gap-3 mb-3">
                   <Link
                     href={`/capability/${cap.slug}`}
                     className="font-serif text-lg hover:text-orange"

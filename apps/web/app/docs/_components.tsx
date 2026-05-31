@@ -34,7 +34,7 @@ export function Term({
 
 export function SectionChip({ num }: { num: string }) {
   return (
-    <span className="inline-flex items-center justify-center w-9 h-9 border border-orange/40 bg-orange/5 text-orange font-mono text-xs shrink-0">
+    <span className="inline-flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 border border-orange/40 bg-orange/5 text-orange font-mono text-xs shrink-0">
       {num}
     </span>
   );
@@ -68,13 +68,13 @@ export function Section({
       className="group scroll-mt-24 mb-6 border border-cream/10 hover:border-orange/25 transition-colors duration-300 bg-warmdark/40"
     >
       <div className="px-7 md:px-12 py-10 md:py-14">
-        <div className="flex items-start gap-5 mb-6">
+        <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-5 mb-6">
           <SectionChip num={num} />
           <div className="flex-1 min-w-0">
             <p className="text-[10px] font-mono tracking-[0.3em] text-cream/40 uppercase mb-1">
               Section {num}
             </p>
-            <h2 className="font-serif text-3xl md:text-4xl tracking-tight">
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl tracking-tight">
               {title}
             </h2>
             {intro && (

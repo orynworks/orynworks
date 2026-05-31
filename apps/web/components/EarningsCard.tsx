@@ -81,7 +81,7 @@ export function EarningsCard({ lifetimeBuilderShareUsdc }: EarningsCardProps) {
 
   return (
     <div className="border border-cream/15 bg-warmdark-light px-8 py-7 mb-8">
-      <div className="flex items-start justify-between gap-6 flex-wrap">
+      <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-4 sm:gap-6">
         <div className="flex-1 min-w-[200px]">
           <p className="text-[10px] font-mono tracking-[0.3em] text-cream/40 uppercase mb-2">
             Claimable balance
@@ -96,15 +96,15 @@ export function EarningsCard({ lifetimeBuilderShareUsdc }: EarningsCardProps) {
           </p>
         </div>
 
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex flex-col items-stretch sm:items-end gap-2 w-full sm:w-auto">
           <button
             onClick={handleClaim}
             disabled={!hasBalance || claiming || !escrowAddress}
-            className="bg-orange text-warmdark px-5 py-3 font-mono text-xs uppercase tracking-widest hover:bg-orange-light transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto bg-orange text-warmdark px-5 py-3 font-mono text-xs uppercase tracking-widest hover:bg-orange-light transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
             {claiming ? "Confirming…" : "Claim to wallet"}
           </button>
-          <p className="text-[10px] font-mono text-cream/40 text-right">
+          <p className="text-[10px] font-mono text-cream/40 text-left sm:text-right">
             ~$0.01 gas on Base
           </p>
         </div>

@@ -9,16 +9,22 @@ type HeaderProps = {
 
 export function Header({ showDashboardLink }: HeaderProps) {
   return (
-    <header className="flex items-center justify-between px-6 py-4 border-b border-cream/10">
+    <header className="relative flex items-center justify-between px-4 sm:px-6 py-4 border-b border-cream/10">
       <Link href="/" className="flex items-center gap-0 text-cream hover:text-orange transition-colors">
-        <Logo size={44} />
-        <span className="font-serif text-xl -ml-1">orynworks</span>
+        <span className="md:hidden">
+          <Logo size={36} />
+        </span>
+        <span className="hidden md:inline-flex">
+          <Logo size={44} />
+        </span>
+        <span className="font-serif text-lg sm:text-xl -ml-1">orynworks</span>
       </Link>
 
       <NavLinks />
 
-      <div className="flex items-center">
+      <div className="flex items-center gap-2">
         <ConnectButton isSignedIn={!!showDashboardLink} />
+        <NavLinks variant="mobile" />
       </div>
     </header>
   );

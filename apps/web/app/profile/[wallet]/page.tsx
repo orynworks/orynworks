@@ -63,7 +63,7 @@ export default async function BuilderProfilePage({
           </div>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
             <div>
-              <h1 className="font-serif text-5xl mb-2">
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl mb-2">
                 {builder.displayName ?? short}
               </h1>
               <p className="font-mono text-sm text-cream/50 break-all">{address}</p>
@@ -98,7 +98,7 @@ export default async function BuilderProfilePage({
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-3 mb-12 max-w-2xl">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-12 max-w-2xl">
           <Stat label="Capabilities" value={publishedCaps.length} />
           <Stat label="Skills" value={skillCount} />
           <Stat label="Knowledge" value={knowledgeCount} />

@@ -3,7 +3,7 @@ import { Logo } from "./Logo";
 
 export function Footer() {
   return (
-    <footer className="border-t border-cream/10 px-6 py-10 mt-12">
+    <footer className="border-t border-cream/10 px-4 sm:px-6 py-10 mt-12">
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-start justify-between gap-8">
         <div className="flex items-start gap-0">
           <Logo size={52} className="text-cream" />
@@ -34,7 +34,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto mt-10 pt-6 border-t border-cream/10 flex items-center justify-between text-xs font-mono uppercase tracking-wider text-cream/40">
+      <div className="max-w-5xl mx-auto mt-10 pt-6 border-t border-cream/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-[10px] sm:text-xs font-mono uppercase tracking-wider text-cream/40">
         <span>© 2026 Oryn Works</span>
         <span>Est. MMXXVI / Built on Base</span>
       </div>

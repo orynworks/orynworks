@@ -19,7 +19,7 @@ export function InstallSnippet({ slug }: Props) {
 
   return (
     <div className="border border-cream/10 bg-warmdark-deep overflow-hidden shadow-[0_8px_24px_-12px_rgba(0,0,0,0.6)]">
-      <div className="flex items-center gap-2 px-3 py-2 bg-warmdark-light border-b border-cream/10">
+      <div className="flex items-center gap-2 px-2 sm:px-3 py-2 bg-warmdark-light border-b border-cream/10">
         <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
         <span className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
         <span className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
@@ -33,9 +33,9 @@ export function InstallSnippet({ slug }: Props) {
           {copied ? "copied ✓" : "copy"}
         </button>
       </div>
-      <div className="px-5 py-4 font-mono text-[13px] text-cream/85 flex items-center gap-3">
-        <span className="text-orange">$</span>
-        <code className="truncate">{command}</code>
+      <div className="px-5 py-4 font-mono text-[13px] text-cream/85 flex items-center gap-3 overflow-x-auto">
+        <span className="text-orange shrink-0">$</span>
+        <code className="whitespace-nowrap">{command}</code>
       </div>
     </div>
   );

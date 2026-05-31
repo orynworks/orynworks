@@ -104,9 +104,9 @@ export default async function MePage() {
               return (
                 <li
                   key={event.id}
-                  className="border border-cream/10 px-4 py-3 flex items-center justify-between text-sm"
+                  className="border border-cream/10 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4 text-sm"
                 >
-                  <div className="min-w-0">
+                  <div className="min-w-0 w-full sm:w-auto">
                     {cap ? (
                       <Link
                         href={`/capability/${cap.slug}`}
@@ -121,7 +121,7 @@ export default async function MePage() {
                       {event.eventType} · {new Date(event.createdAt).toLocaleString()}
                     </p>
                   </div>
-                  <div className="text-right shrink-0 ml-4">
+                  <div className="text-left sm:text-right shrink-0 sm:ml-4">
                     <p className={`text-xs font-mono ${success ? "text-cream/80" : "text-orange"}`}>
                       {success ? "OK" : event.errorCode ?? "FAIL"}
                     </p>

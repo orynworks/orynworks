@@ -12,7 +12,7 @@ export function TerminalDemo() {
       </div>
 
       {/* Terminal content */}
-      <div className="px-6 py-6 font-mono text-sm leading-relaxed">
+      <div className="px-4 sm:px-6 py-6 font-mono text-[11px] sm:text-sm leading-relaxed overflow-x-auto">
         {/* Step 1: install */}
         <div>
           <span className="text-orange">$</span>{" "}

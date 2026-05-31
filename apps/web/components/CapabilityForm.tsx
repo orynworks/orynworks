@@ -207,7 +207,7 @@ export function CapabilityForm() {
       </div>
 
       {/* Type + Category */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         <div>
           <label className="block text-xs font-mono uppercase tracking-wider text-cream/70 mb-2">
             Type *
@@ -319,21 +319,21 @@ export function CapabilityForm() {
       </div>
 
       {/* Submit */}
-      <div className="flex items-center gap-3 pt-2">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-2">
         <button
           type="submit"
           disabled={busy || phase === "done" || !registryAddress}
-          className="bg-orange text-warmdark px-7 py-3 font-mono text-xs uppercase tracking-widest hover:bg-orange-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full sm:w-auto bg-orange text-warmdark px-7 py-3 font-mono text-xs uppercase tracking-widest hover:bg-orange-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {buttonLabel}
         </button>
         {(phase === "confirming" || phase === "submitting") && pendingTxHash && (
-          <span className="text-xs font-mono text-cream/40">
+          <span className="text-xs font-mono text-cream/40 break-all">
             tx {pendingTxHash.slice(0, 10)}…
           </span>
         )}
         {(chainError || (result && !result.ok)) && (
-          <p className="text-xs text-orange">
+          <p className="text-xs text-orange break-words">
             {chainError ?? (result && !result.ok ? result.error : null)}
           </p>
         )}
