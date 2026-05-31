@@ -10,25 +10,30 @@ import { getCapabilityBySlug, getUsageStats, getWalletById } from "@oryn/db";
 
 type RouteParams = Promise<{ slug: string }>;
 
+export const revalidate = 60;
+
 export default async function CapabilityDetailPage({
   params,
 }: {
   params: RouteParams;
 }) {
   const { slug } = await params;
-  const session = await getSession();
 
   const db = getDb();
-  const capability = await getCapabilityBySlug(db, slug);
+  const [session, capability] = await Promise.all([
+    getSession(),
+    getCapabilityBySlug(db, slug),
+  ]);
 
   if (!capability || capability.status !== "published") {
     notFound();
   }
 
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  const stats = await getUsageStats(db, capability.id, sevenDaysAgo);
-
-  const builder = await getWalletById(db, capability.builderId);
+  const [stats, builder] = await Promise.all([
+    getUsageStats(db, capability.id, sevenDaysAgo),
+    getWalletById(db, capability.builderId),
+  ]);
   const builderAddress = builder?.address ?? capability.builderId;
   const builderShort = `${builderAddress.slice(0, 6)}…${builderAddress.slice(-4)}`;
   const isOwner = session?.address.toLowerCase() === builderAddress.toLowerCase();

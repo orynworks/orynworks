@@ -28,6 +28,8 @@ type SearchParams = Promise<{
 
 const PAGE_SIZE = 15;
 
+export const revalidate = 30;
+
 function parseSort(raw: string | undefined): SortMode | undefined {
   if (raw === "popular" || raw === "price-asc" || raw === "price-desc" || raw === "recent") return raw;
   return undefined;

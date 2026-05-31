@@ -9,6 +9,8 @@ import { getSession } from "@/lib/get-session";
 import { getDb } from "@/lib/db";
 import { listFeaturedCapabilities, getLandingStats } from "@oryn/db";
 
+export const revalidate = 30;
+
 export default async function HomePage() {
   const session = await getSession();
   const db = getDb();
