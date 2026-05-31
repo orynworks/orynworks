@@ -201,6 +201,58 @@ const SAMPLES: SeedCapability[] = [
     status: "published",
     version: "1.0.0",
   },
+  {
+    slug: "base-pulse",
+    type: "knowledge",
+    name: "Base Pulse",
+    description:
+      "Real-time snapshot of activity on Base: current gas, trending tokens, recently featured launches, and total chain TVL — all in a single call. Use it as the first call in any Base-focused agent loop to anchor downstream decisions on a fresh picture of the chain.",
+    category: "infra",
+    hostUrl: `${DEMO_HOST}/base-pulse`,
+    priceUsdc: "0",
+    tokenGated: false,
+    status: "published",
+    version: "1.0.0",
+  },
+  {
+    slug: "narrative-tokens",
+    type: "knowledge",
+    name: "Narrative Tokens",
+    description:
+      "Curated lists of tokens by narrative — ai-agents, depin, memes-base, rwa, defi-blue-chips, base-ecosystem, l2s, oracles, gaming — each enriched with live CoinGecko price, 24h change, market cap, and volume. Skip token-by-token guessing; pivot whole strategies by theme.",
+    category: "market-data",
+    hostUrl: `${DEMO_HOST}/narrative-tokens`,
+    priceUsdc: "0",
+    tokenGated: false,
+    status: "published",
+    version: "1.0.0",
+  },
+  {
+    slug: "prediction-markets",
+    type: "knowledge",
+    name: "Prediction Markets",
+    description:
+      "Live snapshot of active Polymarket markets, sorted by 24h volume by default. Optional query string filters markets by topic. Returns market question, outcome prices, volume, liquidity, and end date — wisdom-of-crowds signal most price feeds ignore.",
+    category: "market-data",
+    hostUrl: `${DEMO_HOST}/prediction-markets`,
+    priceUsdc: "0",
+    tokenGated: false,
+    status: "published",
+    version: "1.0.0",
+  },
+  {
+    slug: "base-movers",
+    type: "knowledge",
+    name: "Base Movers",
+    description:
+      "Top Base ecosystem tokens ranked by 24h performance — gainers, losers, volume, or trade count. Each entry includes price, 24h change, 24h volume, trade count, and primary DEX pair. Filter by minimum liquidity to avoid micro-cap noise.",
+    category: "market-data",
+    hostUrl: `${DEMO_HOST}/base-movers`,
+    priceUsdc: "0",
+    tokenGated: false,
+    status: "published",
+    version: "1.0.0",
+  },
 ];
 
 async function main() {

@@ -18,6 +18,10 @@ import { basegasRoute } from "./mcp-demos/base-gas.js";
 import { erc20infoRoute } from "./mcp-demos/erc20-info.js";
 import { txlookupRoute } from "./mcp-demos/tx-lookup.js";
 import { uniswapquoteRoute } from "./mcp-demos/uniswap-quote.js";
+import { basepulseRoute } from "./mcp-demos/base-pulse.js";
+import { narrativetokensRoute } from "./mcp-demos/narrative-tokens.js";
+import { predictionmarketsRoute } from "./mcp-demos/prediction-markets.js";
+import { basemoversRoute } from "./mcp-demos/base-movers.js";
 
 export async function buildServer() {
   const fastify = Fastify({
@@ -56,6 +60,10 @@ export async function buildServer() {
   await fastify.register(erc20infoRoute);
   await fastify.register(txlookupRoute);
   await fastify.register(uniswapquoteRoute);
+  await fastify.register(basepulseRoute);
+  await fastify.register(narrativetokensRoute);
+  await fastify.register(predictionmarketsRoute);
+  await fastify.register(basemoversRoute);
 
   return fastify;
 }
