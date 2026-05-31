@@ -166,10 +166,12 @@ const result = await client.query("github-trending", {
 
 | Contract | Network | Address |
 |---|---|---|
+| `CapabilityRegistry` | **Base mainnet** | [0xDa94bD88aD764EE6eA42Cf450d3fC2f816BA6c37](https://basescan.org/address/0xDa94bD88aD764EE6eA42Cf450d3fC2f816BA6c37) |
+| `RevenueEscrow` | **Base mainnet** | [0x93397efB596aD82254FB047daa53Ac68c3E70a10](https://basescan.org/address/0x93397efB596aD82254FB047daa53Ac68c3E70a10) |
+| `USDC` | Base mainnet | [0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913](https://basescan.org/address/0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913) |
 | `CapabilityRegistry` | Base Sepolia | [0xB9a212DF77AEb7F4201d435381D68Ec10f5BAB5d](https://sepolia.basescan.org/address/0xB9a212DF77AEb7F4201d435381D68Ec10f5BAB5d) |
 | `RevenueEscrow` | Base Sepolia | [0x6b29663C0802F7Bc8B8750F17627a82258EE6e31](https://sepolia.basescan.org/address/0x6b29663C0802F7Bc8B8750F17627a82258EE6e31) |
 | `USDC` (testnet) | Base Sepolia | [0x036CbD53842c5426634e7929541eC2318f3dCF7e](https://sepolia.basescan.org/address/0x036CbD53842c5426634e7929541eC2318f3dCF7e) |
-| Mainnet contracts | — | Publish here after launch |
 
 ## Testing
 
@@ -188,7 +190,8 @@ Full E2E walkthrough in [`TESTING.md`](TESTING.md). Highlights:
 | **1C** — Gateway + x402 payment | ✅ |
 | **1D** — Contracts + settlement + SDK + docs | ✅ |
 | **Pre-mainnet hardening** — on-chain publish, SSRF guard, RPC race fix, built-in demos | ✅ |
-| **Mainnet launch** — contract deploy, hosting, domain | ⏳ |
+| **Mainnet contracts** — CapabilityRegistry + RevenueEscrow deployed to Base 8453 | ✅ |
+| **Mainnet launch** — hosting (Vercel + Railway), domain, public traffic | ⏳ |
 | Phase 2 — Reputation aggregation, on-chain attestations | 🔮 |
 | Phase 3 — Knowledge packs at scale (vector DB) | 🔮 |
 | Phase 4 — Token-gated capabilities | 🔮 |

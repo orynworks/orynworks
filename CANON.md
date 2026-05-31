@@ -105,34 +105,37 @@ basedeploy2/
 
 ---
 
-## 6. Smart Contracts (Deployed to Base Sepolia)
+## 6. Smart Contracts
 
 ### `CapabilityRegistry.sol`
-**Address (Sepolia):** `0xB9a212DF77AEb7F4201d435381D68Ec10f5BAB5d`
+On-chain catalog: each capability has entry `(slug, builder, host, priceWei, version)`. Builders `register()` new capabilities; anyone reads via `getCapability(slugHash)`. Owner can update or deprecate.
 
-**Responsibilities:**
-- On-chain catalog: each capability has entry `(slug, builder, host, priceWei, version)`
-- Builder can `register()` new capabilities
-- Anyone can `getCapability(slugHash)` to verify catalog membership
-- Update version, transfer ownership
+| Network | Address |
+|---|---|
+| **Base mainnet** | `0xDa94bD88aD764EE6eA42Cf450d3fC2f816BA6c37` |
+| Base Sepolia | `0xB9a212DF77AEb7F4201d435381D68Ec10f5BAB5d` |
 
 ### `RevenueEscrow.sol`
-**Address (Sepolia):** `0x6b29663C0802F7Bc8B8750F17627a82258EE6e31`
+Holds USDC from paid calls. Splits 90/10 between builder and protocol on every `settle()`. Builders `claim()` to withdraw. Owner withdraws protocol treasury via `withdrawProtocol()`.
 
-**Responsibilities:**
-- Holds USDC from paid calls
-- Builder can `claim()` revenue at any time
-- Protocol fee split automatically (e.g. 95% builder / 5% protocol)
-- Tracks attestations (reputation events)
+| Network | Address |
+|---|---|
+| **Base mainnet** | `0x93397efB596aD82254FB047daa53Ac68c3E70a10` |
+| Base Sepolia | `0x6b29663C0802F7Bc8B8750F17627a82258EE6e31` |
 
 ### Deploy status
-- Sepolia: deployed + verified on BaseScan
-- Mainnet: pending (next phase, ~$2–5 gas)
+- ✅ Sepolia: deployed + verified on BaseScan
+- ✅ Mainnet: deployed 2026-05-31 + verification submitted (gas burned: 0.0000259 ETH)
 
-### Deploy config (testnet)
+### Deploy config (mainnet — current)
+- Chain ID: `8453`
+- USDC (mainnet): `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`
+- Deployer + Protocol Owner: `0x3c0058Ea6178548573922adC8D9aF5B1bd5A703D` (single wallet, both roles)
+
+### Deploy config (testnet — Sepolia)
 - Chain ID: `84532`
 - USDC (Sepolia): `0x036CbD53842c5426634e7929541eC2318f3dCF7e`
-- Deployer + Protocol Owner: `0xc07D4A0f6379F119e162Dedf0F67F7648D02Fd20` (testnet only — separate keys for mainnet)
+- Deployer + Protocol Owner: `0xc07D4A0f6379F119e162Dedf0F67F7648D02Fd20`
 
 ---
 
