@@ -10,12 +10,16 @@ declare module "fastify" {
   }
 }
 
-export async function requireAuth(req: FastifyRequest, reply: FastifyReply) {
+function extractToken(req: FastifyRequest): string | undefined {
   const cookieMatch = (req.headers.cookie ?? "").match(/oryn_session=([^;]+)/);
   const authHeader = req.headers.authorization;
   const bearerMatch =
     typeof authHeader === "string" ? authHeader.match(/^Bearer (.+)$/) : null;
-  const token = cookieMatch?.[1] ?? bearerMatch?.[1];
+  return cookieMatch?.[1] ?? bearerMatch?.[1];
+}
+
+export async function requireAuth(req: FastifyRequest, reply: FastifyReply) {
+  const token = extractToken(req);
 
   if (!token) {
     reply.code(401).send({ error: "no session" });
@@ -29,4 +33,11 @@ export async function requireAuth(req: FastifyRequest, reply: FastifyReply) {
   }
 
   req.session = session;
+}
+
+export async function optionalAuth(req: FastifyRequest, _reply: FastifyReply) {
+  const token = extractToken(req);
+  if (!token) return;
+  const session = await verifySessionToken(SECRET, token);
+  if (session) req.session = session;
 }

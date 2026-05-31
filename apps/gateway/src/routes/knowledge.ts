@@ -6,7 +6,7 @@ import {
   recordUsageEvent,
 } from "@oryn/db";
 import type { Address } from "viem";
-import { requireAuth } from "../middleware/auth.js";
+import { optionalAuth } from "../middleware/auth.js";
 import { verifyX402 } from "../middleware/x402.js";
 import { getDb } from "../lib/db.js";
 import { verifyProxyUrl } from "../lib/url-safety.js";
@@ -17,15 +17,15 @@ type QueryParams = { slug: string };
 export const knowledgeRoute: FastifyPluginAsync = async (fastify) => {
   fastify.post<{ Params: QueryParams; Body: QueryBody }>(
     "/v1/knowledge/:slug/query",
-    { preHandler: requireAuth },
+    { preHandler: optionalAuth },
     async (req, reply) => {
-      const session = req.session!;
+      const session = req.session;
       const { slug } = req.params;
       const db = getDb();
 
       const cap = await getCapabilityBySlug(db, slug);
-      if (!cap || cap.status !== "published" || cap.type !== "knowledge") {
-        return reply.code(404).send({ error: "knowledge pack not found" });
+      if (!cap || cap.status !== "published") {
+        return reply.code(404).send({ error: "capability not found" });
       }
 
       let payerAddress: string | undefined;
@@ -117,10 +117,15 @@ export const knowledgeRoute: FastifyPluginAsync = async (fastify) => {
       // Record usage event (off-chain ledger).
       // Free capabilities are auto-billed (cost 0). Paid capabilities are
       // marked billed=true when an x402 payment was verified (payerAddress set).
+      const callerAddress =
+        session?.address?.toLowerCase() ??
+        payerAddress ??
+        "0x0000000000000000000000000000000000000000";
+
       await recordUsageEvent(db, {
         capabilityId: cap.id,
-        callerAddress: session.address.toLowerCase(),
-        eventType: "query",
+        callerAddress,
+        eventType: cap.type === "skill" ? "call" : "query",
         requestHash,
         success,
         latencyMs,
