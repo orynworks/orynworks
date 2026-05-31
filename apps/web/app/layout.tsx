@@ -26,6 +26,22 @@ export const metadata: Metadata = {
   description:
     "The settlement layer for AI agent capabilities. Builders publish skills and knowledge. Operators install with a single command. On-chain reputation that compounds.",
   metadataBase: new URL("https://oryn.works"),
+  openGraph: {
+    title: "Oryn Works · Capability marketplace for AI agents",
+    description:
+      "The capability marketplace for AI agents. Install with one command into Claude, Cursor, or any MCP client. Pay per call in USDC on Base.",
+    url: "https://oryn.works",
+    siteName: "Oryn Works",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Oryn Works · Capability marketplace for AI agents",
+    description:
+      "Install with one command into Claude, Cursor, or any MCP client. Pay per call in USDC on Base.",
+    site: "@orynworks",
+    creator: "@orynworks",
+  },
 };
 
 export default function RootLayout({
