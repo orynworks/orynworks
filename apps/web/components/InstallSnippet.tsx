@@ -9,7 +9,7 @@ type Props = {
 
 export function InstallSnippet({ slug }: Props) {
   const [copied, setCopied] = useState(false);
-  const command = `npx oryn install ${slug}`;
+  const command = `npx orynworks install ${slug}`;
 
   async function handleCopy() {
     await navigator.clipboard.writeText(command);

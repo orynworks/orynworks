@@ -10,7 +10,7 @@ Operators install with a single command. On-chain reputation that compounds.
 [![Built on Base](https://img.shields.io/badge/built%20on-Base-0052FF?style=flat-square)](https://base.org)
 [![License: MIT](https://img.shields.io/badge/license-MIT-E5734F?style=flat-square)](#license)
 [![Status](https://img.shields.io/badge/status-pre--mainnet-orange?style=flat-square)](#roadmap)
-[![SDK](https://img.shields.io/badge/sdk-oryn%20v0.1.0-cream?style=flat-square)](packages/sdk)
+[![SDK](https://img.shields.io/badge/sdk-orynworks%20v0.1.0-cream?style=flat-square)](packages/sdk)
 
 [Browse](#quick-start)  ·  [Build](#publish-a-capability)  ·  [Docs](https://oryn.works/docs)  ·  [x402](https://github.com/coinbase/x402)
 
@@ -28,7 +28,7 @@ Oryn is a two-sided marketplace for AI agent capabilities, built on Base.
 - Every settled call emits an on-chain attestation — reputation compounds with usage.
 
 ```sh
-$ npx oryn install ens-resolver --client claude
+$ npx orynworks install ens-resolver --client claude
 → Resolving capability...
 → Verified on-chain at 0xB9a2…BAB5d
 ✓ Installed ens-resolver@1.0.0
@@ -74,7 +74,7 @@ $ npx oryn install ens-resolver --client claude
 | Chain | Base mainnet `8453` / Base Sepolia `84532` |
 | Currency | USDC (per-call billing) |
 | Auth | SIWE (Sign-In With Ethereum) + JWT sessions |
-| SDK | `oryn` npm package (CLI + programmatic) |
+| SDK | `orynworks` npm package (CLI + programmatic) |
 
 ## Project layout
 
@@ -86,7 +86,7 @@ basedeploy2/
 ├── packages/
 │   ├── db/               # Drizzle schema + repos + URL safety
 │   ├── contracts/        # Solidity sources + Foundry deploy script
-│   └── sdk/              # `oryn` CLI + OrynClient
+│   └── sdk/              # `orynworks` CLI + OrynClient
 ├── docs/                 # Design specs + execution plans
 ├── CANON.md              # Single source of truth: product + brand + vocab
 ├── TESTING.md            # Pre-mainnet E2E walkthrough
@@ -149,7 +149,7 @@ These let the marketplace feel populated from day one and serve as reference imp
 ## Programmatic SDK
 
 ```ts
-import { OrynClient } from "oryn";
+import { OrynClient } from "orynworks";
 
 const client = new OrynClient({
   gatewayUrl: "https://api.oryn.works",

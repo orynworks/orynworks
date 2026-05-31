@@ -2,12 +2,12 @@
 // Keeping them out of page.tsx avoids Turbopack HMR memory blow-ups on
 // pages that mix many large multi-line template literals with JSX.
 
-export const QUICKSTART_INSTALL = `$ npx oryn install deep-research --client claude
+export const QUICKSTART_INSTALL = `$ npx orynworks install deep-research --client claude
 → Resolving capability...
 → Verified on-chain at 0xB9a2…BAB5d
 ✓ Installed deep-research@1.2.0`;
 
-export const QUICKSTART_PRINT = `$ npx oryn install deep-research
+export const QUICKSTART_PRINT = `$ npx orynworks install deep-research
 
 # Add to your MCP-aware client config:
 {
@@ -19,16 +19,16 @@ export const QUICKSTART_PRINT = `$ npx oryn install deep-research
   }
 }`;
 
-export const QUICKSTART_CALL = `$ npx oryn call deep-research --prompt "summarize latest base ecosystem trends"`;
+export const QUICKSTART_CALL = `$ npx orynworks call deep-research --prompt "summarize latest base ecosystem trends"`;
 
 export const OPERATORS_INSTALL = `# Auto-write into Claude Desktop config
-$ npx oryn install <slug> --client claude
+$ npx orynworks install <slug> --client claude
 
 # Cursor
-$ npx oryn install <slug> --client cursor
+$ npx orynworks install <slug> --client cursor
 
 # Just print the JSON
-$ npx oryn install <slug>`;
+$ npx orynworks install <slug>`;
 
 export const BUILDERS_SPLIT = `Operator pays   1.0000 USDC
         →   0.9000 USDC  →  builderBalance[you]
@@ -86,7 +86,7 @@ export const API_RESPONSES = `// 200 OK
            "upstream_timeout"
 }`;
 
-export const SDK_CLI = `oryn install <slug> [--client claude|cursor|print] [--gateway URL]
+export const SDK_CLI = `orynworks install <slug> [--client claude|cursor|print] [--gateway URL]
 oryn call    <slug> --prompt "..." [--gateway URL] [--auth TOKEN]
 oryn query   <slug> --prompt "..." [--gateway URL] [--auth TOKEN]
 oryn ping    [--gateway URL]

@@ -38,14 +38,14 @@ function parseArgs(argv: string[]): ParsedArgs {
 function help(): void {
   process.stdout.write(
     [
-      "oryn — capability marketplace for AI agents",
+      "orynworks — capability marketplace for AI agents",
       "",
       "Usage:",
-      "  oryn install <slug> [--client claude|cursor|print] [--gateway URL]",
-      "  oryn call <slug> --prompt \"...\" [--gateway URL] [--auth TOKEN]",
-      "  oryn query <slug> --prompt \"...\" [--gateway URL] [--auth TOKEN]",
-      "  oryn ping [--gateway URL]",
-      "  oryn --version",
+      "  orynworks install <slug> [--client claude|cursor|print] [--gateway URL]",
+      "  orynworks call <slug> --prompt \"...\" [--gateway URL] [--auth TOKEN]",
+      "  orynworks query <slug> --prompt \"...\" [--gateway URL] [--auth TOKEN]",
+      "  orynworks ping [--gateway URL]",
+      "  orynworks --version",
       "",
       "Env vars:",
       "  ORYN_GATEWAY_URL    Override default gateway",
@@ -190,7 +190,7 @@ async function runPing(args: ParsedArgs): Promise<number> {
 async function main(): Promise<number> {
   const args = parseArgs(process.argv.slice(2));
   if (args.flags.version || args.command === "--version" || args.command === "-v") {
-    process.stdout.write(`oryn v${VERSION}\n`);
+    process.stdout.write(`orynworks v${VERSION}\n`);
     return 0;
   }
   if (!args.command || args.command === "help" || args.flags.help) {

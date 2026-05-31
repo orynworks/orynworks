@@ -16,7 +16,7 @@ export function TerminalDemo() {
         {/* Step 1: install */}
         <div>
           <span className="text-orange">$</span>{" "}
-          <span className="text-cream">npx oryn install </span>
+          <span className="text-cream">npx orynworks install </span>
           <span className="text-cream/90">alpha-feed</span>
         </div>
         <div className="text-cream/60 mt-1">

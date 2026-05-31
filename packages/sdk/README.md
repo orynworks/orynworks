@@ -1,4 +1,4 @@
-# oryn
+# orynworks
 
 CLI and SDK for the [Oryn Works](https://oryn.works) capability marketplace.
 
@@ -8,17 +8,17 @@ Install a skill or knowledge pack into your MCP-aware client, or call one direct
 
 ```bash
 # Print a config snippet (default — safe, no file writes)
-npx oryn install deep-research
+npx orynworks install deep-research
 
 # Write directly into Claude Desktop or Cursor config
-npx oryn install deep-research --client claude
-npx oryn install deep-research --client cursor
+npx orynworks install deep-research --client claude
+npx orynworks install deep-research --client cursor
 ```
 
 ## Use programmatically
 
 ```ts
-import { OrynClient } from "oryn";
+import { OrynClient } from "orynworks";
 
 const client = new OrynClient({
   gatewayUrl: "https://api.oryn.works",
@@ -33,10 +33,10 @@ const result = await client.query("alpha-feed", {
 ## CLI commands
 
 ```
-oryn install <slug> [--client claude|cursor|print] [--gateway URL]
-oryn call    <slug> --prompt "..." [--gateway URL] [--auth TOKEN]
-oryn query   <slug> --prompt "..." [--gateway URL] [--auth TOKEN]
-oryn ping    [--gateway URL]
+orynworks install <slug> [--client claude|cursor|print] [--gateway URL]
+orynworks call    <slug> --prompt "..." [--gateway URL] [--auth TOKEN]
+orynworks query   <slug> --prompt "..." [--gateway URL] [--auth TOKEN]
+orynworks ping    [--gateway URL]
 ```
 
 ## Env

@@ -106,7 +106,7 @@ export default async function DocsPage() {
             intro="Oryn is a marketplace of MCP capabilities for AI agents. Install one into your client and use it immediately."
           >
             <p>Install <em>deep-research</em> into Claude Desktop:</p>
-            <Term title="$ npx oryn install --client claude">{QUICKSTART_INSTALL}</Term>
+            <Term title="$ npx orynworks install --client claude">{QUICKSTART_INSTALL}</Term>
             <p>Or print the config snippet to paste manually (no file writes):</p>
             <Term>{QUICKSTART_PRINT}</Term>
             <p>Make a direct call for testing (production agents go through their MCP client):</p>

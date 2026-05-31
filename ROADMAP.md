@@ -140,7 +140,7 @@ Tasks:
 
 - Partner framework integrations (Claude Desktop, Cursor, OpenAgents)
 - `@oryn/sdk` npm package
-- CLI: `npx oryn install <slug>` (one-line install to Claude Desktop/Cursor)
+- CLI: `npx orynworks install <slug>` (one-line install to Claude Desktop/Cursor)
 - Discord bot for community
 - Public API + docs site
 - Builder grants program

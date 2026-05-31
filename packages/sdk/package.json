@@ -1,12 +1,19 @@
 {
-  "name": "oryn",
+  "name": "orynworks",
   "version": "0.1.0",
   "description": "CLI and SDK for the Oryn Works capability marketplace.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orynworks/orynworks.git",
+    "directory": "packages/sdk"
+  },
+  "homepage": "https://oryn.works",
+  "bugs": "https://github.com/orynworks/orynworks/issues",
   "bin": {
-    "oryn": "dist/cli.js"
+    "orynworks": "dist/cli.js"
   },
   "exports": {
     ".": {

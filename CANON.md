@@ -45,7 +45,7 @@ Oryn Works is a **marketplace for AI agent capabilities**. Builders publish *ski
 ### Side B: Operators
 - Teams building AI agent products
 - Browse hub, pick capabilities for their agent's needs
-- Install via `npx oryn install <slug>` into their MCP client
+- Install via `npx orynworks install <slug>` into their MCP client
 - Agent runs, capability calls are auto-billed
 - Can attest (on-chain review) to help builders grow
 
