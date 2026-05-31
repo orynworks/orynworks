@@ -235,7 +235,7 @@ export default async function DocsPage() {
             intro="The orynworks npm package ships a CLI plus a programmatic client."
           >
             <MiniHeading>CLI</MiniHeading>
-            <Term title="$ oryn --help">{SDK_CLI}</Term>
+            <Term title="$ orynworks --help">{SDK_CLI}</Term>
 
             <MiniHeading>Programmatic</MiniHeading>
             <Term title="$ vim my-agent.ts">{SDK_PROGRAMMATIC}</Term>

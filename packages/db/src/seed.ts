@@ -9,7 +9,7 @@ if (!databaseUrl) {
   process.exit(1);
 }
 
-// Seed builder address — recognisable, not a real wallet.
+// Seed builder address: recognisable, not a real wallet.
 const SEED_BUILDER_ADDRESS = "0x000000000000000000000000000000000000d0ed";
 
 // Host URL of the built-in demo capabilities. In dev this is the local gateway.
@@ -37,7 +37,7 @@ const SAMPLES: SeedCapability[] = [
     type: "skill",
     name: "Base Live Block",
     description:
-      "Real-time block info for Base mainnet (chainId 8453) or Base Sepolia (84532). Returns block number, hash, timestamp, and transaction count.\n\nUseful for agents that need to time on-chain actions or display chain health.",
+      "Real-time block info for Base mainnet (chainId 8453). Returns block number, hash, timestamp, and transaction count.\n\nUseful for agents that need to time on-chain actions or display chain health.",
     category: "data",
     hostUrl: `${DEMO_HOST}/base-block`,
     priceUsdc: "0",
@@ -154,7 +154,7 @@ const SAMPLES: SeedCapability[] = [
     type: "skill",
     name: "Base Gas",
     description:
-      "Current Base gas conditions. Returns base fee, gas price, priority fee, and a suggested total gwei (with a 10% buffer) for the next block. Use this before broadcasting any transaction on Base mainnet or Sepolia.",
+      "Current Base gas conditions. Returns base fee, gas price, priority fee, and a suggested total gwei (with a 10% buffer) for the next block. Use this before broadcasting any transaction on Base.",
     category: "infra",
     hostUrl: `${DEMO_HOST}/base-gas`,
     priceUsdc: "0",
@@ -180,7 +180,7 @@ const SAMPLES: SeedCapability[] = [
     type: "skill",
     name: "Transaction Lookup",
     description:
-      "Transaction receipt for any tx hash on Base, Ethereum, or Base Sepolia. Returns status, block, from / to, gas used, log count, and a direct BaseScan / Etherscan link. Use this to confirm a tx landed and inspect its outcome.",
+      "Transaction receipt for any tx hash on Base or Ethereum. Returns status, block, from / to, gas used, log count, and a direct BaseScan or Etherscan link. Use this to confirm a tx landed and inspect its outcome.",
     category: "infra",
     hostUrl: `${DEMO_HOST}/tx-lookup`,
     priceUsdc: "0",
@@ -206,7 +206,7 @@ const SAMPLES: SeedCapability[] = [
     type: "knowledge",
     name: "Base Pulse",
     description:
-      "Real-time snapshot of activity on Base: current gas, trending tokens, recently featured launches, and total chain TVL — all in a single call. Use it as the first call in any Base-focused agent loop to anchor downstream decisions on a fresh picture of the chain.",
+      "Real-time snapshot of activity on Base: current gas, trending tokens, recently featured launches, and total chain TVL, all in a single call. Use it as the first call in any Base-focused agent loop to anchor downstream decisions on a fresh picture of the chain.",
     category: "infra",
     hostUrl: `${DEMO_HOST}/base-pulse`,
     priceUsdc: "0",
@@ -219,7 +219,7 @@ const SAMPLES: SeedCapability[] = [
     type: "knowledge",
     name: "Narrative Tokens",
     description:
-      "Curated lists of tokens by narrative — ai-agents, depin, memes-base, rwa, defi-blue-chips, base-ecosystem, l2s, oracles, gaming — each enriched with live CoinGecko price, 24h change, market cap, and volume. Skip token-by-token guessing; pivot whole strategies by theme.",
+      "Curated lists of tokens by narrative (ai-agents, depin, memes-base, rwa, defi-blue-chips, base-ecosystem, l2s, oracles, gaming), each enriched with live CoinGecko price, 24h change, market cap, and volume. Skip token-by-token guessing; pivot whole strategies by theme.",
     category: "market-data",
     hostUrl: `${DEMO_HOST}/narrative-tokens`,
     priceUsdc: "0",
@@ -232,7 +232,7 @@ const SAMPLES: SeedCapability[] = [
     type: "knowledge",
     name: "Prediction Markets",
     description:
-      "Live snapshot of active Polymarket markets, sorted by 24h volume by default. Optional query string filters markets by topic. Returns market question, outcome prices, volume, liquidity, and end date — wisdom-of-crowds signal most price feeds ignore.",
+      "Live snapshot of active Polymarket markets, sorted by 24h volume by default. Optional query string filters markets by topic. Returns market question, outcome prices, volume, liquidity, and end date. A wisdom-of-crowds signal most price feeds ignore.",
     category: "market-data",
     hostUrl: `${DEMO_HOST}/prediction-markets`,
     priceUsdc: "0",
@@ -245,7 +245,7 @@ const SAMPLES: SeedCapability[] = [
     type: "knowledge",
     name: "Base Movers",
     description:
-      "Top Base ecosystem tokens ranked by 24h performance — gainers, losers, volume, or trade count. Each entry includes price, 24h change, 24h volume, trade count, and primary DEX pair. Filter by minimum liquidity to avoid micro-cap noise.",
+      "Top Base ecosystem tokens ranked by 24h performance (gainers, losers, volume, or trade count). Each entry includes price, 24h change, 24h volume, trade count, and primary DEX pair. Filter by minimum liquidity to avoid micro-cap noise.",
     category: "market-data",
     hostUrl: `${DEMO_HOST}/base-movers`,
     priceUsdc: "0",
@@ -284,6 +284,7 @@ async function main() {
   const builderId = seedBuilder[0].id;
 
   let createdCount = 0;
+  let updatedCount = 0;
   let skippedCount = 0;
   for (const sample of SAMPLES) {
     const existing = await db
@@ -292,18 +293,52 @@ async function main() {
       .where(eq(capability.slug, sample.slug))
       .limit(1);
 
-    if (existing.length > 0) {
-      console.log(`  - skip: ${sample.slug} (already exists)`);
+    if (existing.length === 0) {
+      await db.insert(capability).values({ ...sample, builderId });
+      console.log(`  + create: ${sample.slug}`);
+      createdCount++;
+      continue;
+    }
+
+    const current = existing[0];
+    const drift =
+      current.name !== sample.name ||
+      current.description !== sample.description ||
+      current.category !== sample.category ||
+      current.hostUrl !== sample.hostUrl ||
+      current.type !== sample.type ||
+      current.tokenGated !== sample.tokenGated ||
+      current.priceUsdc !== sample.priceUsdc ||
+      current.version !== sample.version ||
+      current.status !== sample.status;
+
+    if (!drift) {
+      console.log(`  · same:   ${sample.slug}`);
       skippedCount++;
       continue;
     }
 
-    await db.insert(capability).values({ ...sample, builderId });
-    console.log(`  + create: ${sample.slug}`);
-    createdCount++;
+    await db
+      .update(capability)
+      .set({
+        name: sample.name,
+        description: sample.description,
+        category: sample.category,
+        hostUrl: sample.hostUrl,
+        type: sample.type,
+        tokenGated: sample.tokenGated,
+        priceUsdc: sample.priceUsdc,
+        version: sample.version,
+        status: sample.status,
+      })
+      .where(eq(capability.slug, sample.slug));
+    console.log(`  ~ update: ${sample.slug}`);
+    updatedCount++;
   }
 
-  console.log(`\n✓ Seed complete: ${createdCount} created, ${skippedCount} skipped.`);
+  console.log(
+    `\n✓ Seed complete: ${createdCount} created, ${updatedCount} updated, ${skippedCount} unchanged.`,
+  );
   await sql.end();
 }
 
