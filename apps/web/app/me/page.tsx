@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { StatusBar } from "@/components/StatusBar";
+import { EyebrowChip } from "@/components/EyebrowChip";
 import { getSession } from "@/lib/get-session";
 import { getDb } from "@/lib/db";
 import {
@@ -15,13 +17,14 @@ export default async function MePage() {
 
   if (!session) {
     return (
-      <main className="min-h-screen flex flex-col">
+      <main className="min-h-screen flex flex-col bg-warmdark">
         <Header showDashboardLink={false} />
+        <StatusBar />
         <section className="flex-1 flex items-center justify-center px-6 py-20">
           <div className="text-center max-w-md">
-            <p className="text-xs tracking-[0.3em] text-cream/60 uppercase mb-3 font-mono">
-              Profile
-            </p>
+            <div className="flex justify-center mb-4">
+              <EyebrowChip>Profile</EyebrowChip>
+            </div>
             <h1 className="font-serif text-4xl mb-4">Sign in to continue.</h1>
             <p className="text-cream/60 text-sm mb-8">
               Connect your wallet and sign in to see your spending, recent calls, and
@@ -52,12 +55,13 @@ export default async function MePage() {
   const capMap = new Map(caps.map((c) => [c.id, c]));
 
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col bg-warmdark">
       <Header showDashboardLink={false} />
+      <StatusBar />
       <section className="flex-1 px-6 py-12 max-w-4xl mx-auto w-full">
-        <p className="text-xs tracking-[0.3em] text-cream/60 uppercase mb-3 font-mono">
-          Profile
-        </p>
+        <div className="mb-3">
+          <EyebrowChip>Profile</EyebrowChip>
+        </div>
         <h1 className="font-serif text-4xl mb-6">Your wallet</h1>
 
         {/* Identity */}

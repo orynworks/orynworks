@@ -11,6 +11,19 @@ const CATEGORIES = [
   { value: "utility", label: "Utility" },
 ];
 
+const SORTS = [
+  { value: "", label: "Sort: Recent" },
+  { value: "popular", label: "Sort: Popular" },
+  { value: "price-asc", label: "Sort: Price ↑" },
+  { value: "price-desc", label: "Sort: Price ↓" },
+];
+
+const PRICES = [
+  { value: "", label: "All" },
+  { value: "free", label: "Free" },
+  { value: "paid", label: "Paid" },
+];
+
 export function BrowseFilters() {
   const router = useRouter();
   const pathname = usePathname();
@@ -20,14 +33,16 @@ export function BrowseFilters() {
   const currentType = searchParams.get("type") ?? "";
   const currentCategory = searchParams.get("category") ?? "";
   const currentSearch = searchParams.get("q") ?? "";
+  const currentSort = searchParams.get("sort") ?? "";
+  const currentPrice = searchParams.get("price") ?? "";
+  const currentBuilder = searchParams.get("builder") ?? "";
 
   const [searchInput, setSearchInput] = useState(currentSearch);
 
-  // Debounce search input
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (searchInput === currentSearch) return;
-      updateParams({ q: searchInput || null });
+      updateParams({ q: searchInput || null, page: null });
     }, 350);
     return () => clearTimeout(timeout);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -39,6 +54,8 @@ export function BrowseFilters() {
       if (value === null || value === "") params.delete(key);
       else params.set(key, value);
     }
+    // any filter change resets pagination to page 1
+    if (!("page" in updates)) params.delete("page");
     startTransition(() => {
       router.push(`${pathname}?${params.toString()}`);
     });
@@ -70,17 +87,49 @@ export function BrowseFilters() {
         })}
         {pending && (
           <span className="ml-auto text-[10px] text-cream/40 font-mono uppercase">
-            Loading…
+            loading…
           </span>
         )}
       </div>
 
-      {/* Category + search */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      {/* Sort + Price + Category + Search */}
+      <div className="grid grid-cols-1 sm:grid-cols-[auto_auto_auto_1fr] gap-3 items-stretch">
+        <select
+          value={currentSort}
+          onChange={(e) => updateParams({ sort: e.target.value || null })}
+          className="bg-warmdark-light border border-cream/15 px-3 py-2 text-cream text-xs font-mono uppercase tracking-wider focus:outline-none focus:border-orange"
+        >
+          {SORTS.map((s) => (
+            <option key={s.value} value={s.value}>
+              {s.label}
+            </option>
+          ))}
+        </select>
+
+        {/* Price segmented */}
+        <div className="flex items-stretch border border-cream/15 bg-warmdark-light">
+          {PRICES.map((p) => {
+            const active = currentPrice === p.value;
+            return (
+              <button
+                key={p.value}
+                onClick={() => updateParams({ price: p.value || null })}
+                className={`px-3 py-2 text-[11px] font-mono uppercase tracking-wider transition-colors ${
+                  active
+                    ? "bg-orange text-warmdark"
+                    : "text-cream/60 hover:text-cream"
+                }`}
+              >
+                {p.label}
+              </button>
+            );
+          })}
+        </div>
+
         <select
           value={currentCategory}
           onChange={(e) => updateParams({ category: e.target.value || null })}
-          className="bg-warmdark-light border border-cream/15 px-4 py-2 text-cream text-sm font-mono focus:outline-none focus:border-orange"
+          className="bg-warmdark-light border border-cream/15 px-3 py-2 text-cream text-xs font-mono uppercase tracking-wider focus:outline-none focus:border-orange"
         >
           {CATEGORIES.map((c) => (
             <option key={c.value} value={c.value}>
@@ -88,14 +137,32 @@ export function BrowseFilters() {
             </option>
           ))}
         </select>
+
         <input
           type="search"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           placeholder="Search capabilities…"
-          className="flex-1 bg-warmdark-light border border-cream/15 px-4 py-2 text-cream text-sm font-sans focus:outline-none focus:border-orange"
+          className="bg-warmdark-light border border-cream/15 px-3 py-2 text-cream text-sm font-sans focus:outline-none focus:border-orange"
         />
       </div>
+
+      {/* Builder chip (URL-set, with clear) */}
+      {currentBuilder && (
+        <div className="flex items-center gap-2 text-xs font-mono">
+          <span className="text-cream/40 uppercase tracking-wider">filtered by builder</span>
+          <span className="inline-flex items-center gap-2 px-2 py-1 border border-orange/40 bg-orange/5 text-orange">
+            {currentBuilder.slice(0, 6)}…{currentBuilder.slice(-4)}
+            <button
+              onClick={() => updateParams({ builder: null })}
+              className="text-orange/60 hover:text-orange"
+              aria-label="clear builder filter"
+            >
+              ✕
+            </button>
+          </span>
+        </div>
+      )}
     </div>
   );
 }

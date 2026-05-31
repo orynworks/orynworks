@@ -3,6 +3,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CapabilityCard } from "@/components/CapabilityCard";
 import { TerminalDemo } from "@/components/TerminalDemo";
+import { StatusBar } from "@/components/StatusBar";
+import { EyebrowChip } from "@/components/EyebrowChip";
 import { getSession } from "@/lib/get-session";
 import { getDb } from "@/lib/db";
 import { listFeaturedCapabilities, getLandingStats } from "@oryn/db";
@@ -16,14 +18,32 @@ export default async function HomePage() {
   ]);
 
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col bg-warmdark">
       <Header showDashboardLink={!!session} />
+      <StatusBar />
 
-      <section className="flex flex-col items-center justify-center px-6 py-16 md:py-20">
-        <div className="max-w-xl text-center">
-          <p className="text-xs tracking-[0.3em] text-cream/60 uppercase mb-4 font-mono">
-            A capability marketplace
-          </p>
+      <section className="relative flex flex-col items-center justify-center px-6 py-16 md:py-24 overflow-hidden">
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-[0.15] pointer-events-none"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at center, rgba(232,220,200,0.55) 1px, transparent 1px)",
+            backgroundSize: "22px 22px",
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute -top-32 left-1/2 -translate-x-1/2 w-[640px] h-[480px] rounded-full pointer-events-none opacity-[0.18] blur-3xl"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(229,115,79,0.6) 0%, transparent 70%)",
+          }}
+        />
+        <div className="relative max-w-xl text-center">
+          <div className="flex justify-center mb-5">
+            <EyebrowChip>A capability marketplace</EyebrowChip>
+          </div>
           <h1 className="font-serif text-4xl md:text-5xl leading-tight tracking-tight mb-5">
             The capability marketplace{" "}
             <span className="text-orange">for AI agents.</span>

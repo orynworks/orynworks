@@ -1,5 +1,17 @@
-import { eq, and, desc, ilike, or, inArray, count, countDistinct } from "drizzle-orm";
-import { capability, type Capability, type NewCapability } from "./schema.js";
+import {
+  eq,
+  and,
+  desc,
+  asc,
+  ilike,
+  or,
+  inArray,
+  count,
+  countDistinct,
+  gt,
+  sql as drizzleSql,
+} from "drizzle-orm";
+import { capability, wallet, usageEvent, type Capability, type NewCapability } from "./schema.js";
 import type { DbClient } from "./client.js";
 
 export async function createCapability(
@@ -22,21 +34,32 @@ export async function getCapabilityBySlug(
   return result[0] ?? null;
 }
 
+export type SortMode = "recent" | "popular" | "price-asc" | "price-desc";
+export type PriceFilter = "free" | "paid";
+
 export type ListFilters = {
   type?: "skill" | "knowledge";
   category?: string;
   search?: string;
+  price?: PriceFilter;
+  builderAddress?: string;
+  sort?: SortMode;
   limit?: number;
   offset?: number;
 };
 
-export async function listPublishedCapabilities(
-  db: DbClient,
-  filters: ListFilters = {}
-): Promise<Capability[]> {
+function buildConditions(filters: ListFilters, builderId: string | null) {
   const conditions = [eq(capability.status, "published")];
   if (filters.type) conditions.push(eq(capability.type, filters.type));
   if (filters.category) conditions.push(eq(capability.category, filters.category));
+  if (filters.price === "free") {
+    conditions.push(eq(capability.priceUsdc, "0"));
+  } else if (filters.price === "paid") {
+    conditions.push(gt(capability.priceUsdc, "0"));
+  }
+  if (builderId) {
+    conditions.push(eq(capability.builderId, builderId));
+  }
   if (filters.search) {
     const searchClause = or(
       ilike(capability.name, `%${filters.search}%`),
@@ -45,13 +68,98 @@ export async function listPublishedCapabilities(
     );
     if (searchClause) conditions.push(searchClause);
   }
+  return conditions;
+}
+
+async function resolveBuilderIdByAddress(
+  db: DbClient,
+  address: string
+): Promise<string | null> {
+  const row = await db
+    .select({ id: wallet.id })
+    .from(wallet)
+    .where(eq(wallet.address, address.toLowerCase()))
+    .limit(1);
+  return row[0]?.id ?? null;
+}
+
+export async function listPublishedCapabilities(
+  db: DbClient,
+  filters: ListFilters = {}
+): Promise<Capability[]> {
+  let builderId: string | null = null;
+  if (filters.builderAddress) {
+    builderId = await resolveBuilderIdByAddress(db, filters.builderAddress);
+    if (!builderId) return []; // no such builder = no rows
+  }
+
+  const conditions = buildConditions(filters, builderId);
+  const sort = filters.sort ?? "recent";
+
+  // "popular" sort needs an aggregated call-count join. We implement it as a
+  // subquery so the ordering plays nicely with limit/offset.
+  if (sort === "popular") {
+    const counted = await db
+      .select({
+        cap: capability,
+        callCount: drizzleSql<number>`COALESCE((
+          SELECT COUNT(*) FROM ${usageEvent}
+          WHERE ${usageEvent.capabilityId} = ${capability.id}
+            AND ${usageEvent.success} = true
+        ), 0)`,
+      })
+      .from(capability)
+      .where(and(...conditions))
+      .orderBy(
+        drizzleSql`COALESCE((
+          SELECT COUNT(*) FROM ${usageEvent}
+          WHERE ${usageEvent.capabilityId} = ${capability.id}
+            AND ${usageEvent.success} = true
+        ), 0) DESC`,
+        desc(capability.createdAt)
+      )
+      .limit(filters.limit ?? 50)
+      .offset(filters.offset ?? 0);
+    return counted.map((r) => r.cap);
+  }
+
+  let orderBy;
+  switch (sort) {
+    case "price-asc":
+      orderBy = [asc(capability.priceUsdc), desc(capability.createdAt)];
+      break;
+    case "price-desc":
+      orderBy = [desc(capability.priceUsdc), desc(capability.createdAt)];
+      break;
+    case "recent":
+    default:
+      orderBy = [desc(capability.createdAt)];
+  }
+
   return db
     .select()
     .from(capability)
     .where(and(...conditions))
-    .orderBy(desc(capability.createdAt))
+    .orderBy(...orderBy)
     .limit(filters.limit ?? 50)
     .offset(filters.offset ?? 0);
+}
+
+export async function countPublishedCapabilities(
+  db: DbClient,
+  filters: ListFilters = {}
+): Promise<number> {
+  let builderId: string | null = null;
+  if (filters.builderAddress) {
+    builderId = await resolveBuilderIdByAddress(db, filters.builderAddress);
+    if (!builderId) return 0;
+  }
+  const conditions = buildConditions(filters, builderId);
+  const rows = await db
+    .select({ total: count() })
+    .from(capability)
+    .where(and(...conditions));
+  return Number(rows[0]?.total ?? 0);
 }
 
 export async function listCapabilitiesByBuilder(

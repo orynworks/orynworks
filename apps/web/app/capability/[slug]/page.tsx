@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { InstallSnippet } from "@/components/InstallSnippet";
+import { StatusBar } from "@/components/StatusBar";
 import { getSession } from "@/lib/get-session";
 import { getDb } from "@/lib/db";
 import { getCapabilityBySlug, getUsageStats, getWalletById } from "@oryn/db";
@@ -39,8 +40,9 @@ export default async function CapabilityDetailPage({
       : `$${Number(capability.priceUsdc).toFixed(4)} USDC`;
 
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col bg-warmdark">
       <Header showDashboardLink={!!session} />
+      <StatusBar />
 
       <section className="flex-1 px-6 py-12 max-w-6xl mx-auto w-full">
         {/* Breadcrumb */}
@@ -161,16 +163,25 @@ export default async function CapabilityDetailPage({
             </div>
 
             <div className="border border-cream/15 p-5 space-y-3 text-sm">
-              <div className="flex justify-between">
+              <div className="flex items-center justify-between">
                 <span className="text-cream/50 font-mono uppercase text-[10px] tracking-wider">
                   Builder
                 </span>
-                <Link
-                  href={`/profile/${builderAddress}`}
-                  className="font-mono text-cream/80 hover:text-orange"
-                >
-                  {builderShort}
-                </Link>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/profile/${builderAddress}`}
+                    className="font-mono text-cream/80 hover:text-orange"
+                  >
+                    {builderShort}
+                  </Link>
+                  <Link
+                    href={`/browse?builder=${builderAddress}`}
+                    className="text-[10px] font-mono uppercase tracking-wider text-cream/40 hover:text-orange transition-colors border-l border-cream/15 pl-2"
+                    title="See all their capabilities"
+                  >
+                    all →
+                  </Link>
+                </div>
               </div>
               <div className="flex justify-between">
                 <span className="text-cream/50 font-mono uppercase text-[10px] tracking-wider">

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CapabilityCard } from "@/components/CapabilityCard";
+import { StatusBar } from "@/components/StatusBar";
+import { EyebrowChip } from "@/components/EyebrowChip";
 import { getSession } from "@/lib/get-session";
 import { getDb } from "@/lib/db";
 import {
@@ -49,15 +51,16 @@ export default async function BuilderProfilePage({
   });
 
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col bg-warmdark">
       <Header showDashboardLink={!!session} />
+      <StatusBar />
 
       <section className="flex-1 px-6 py-12 max-w-6xl mx-auto w-full">
         {/* Profile header */}
         <div className="mb-10">
-          <p className="text-xs tracking-[0.3em] text-cream/60 uppercase mb-3 font-mono">
-            Builder
-          </p>
+          <div className="mb-3">
+            <EyebrowChip>Builder</EyebrowChip>
+          </div>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
             <div>
               <h1 className="font-serif text-5xl mb-2">

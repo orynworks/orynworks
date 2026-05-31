@@ -2,158 +2,140 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { getSession } from "@/lib/get-session";
+import { Code, Term, Section, MiniHeading } from "./_components";
+import {
+  SECTIONS,
+  CONTRACT_ROWS,
+  QUICKSTART_INSTALL,
+  QUICKSTART_PRINT,
+  QUICKSTART_CALL,
+  OPERATORS_INSTALL,
+  BUILDERS_SPLIT,
+  X402_FLOW,
+  API_SKILL_CURL,
+  API_KNOWLEDGE_CURL,
+  API_RESPONSES,
+  SDK_CLI,
+  SDK_PROGRAMMATIC,
+} from "./_data";
 
-const SECTIONS: { id: string; label: string }[] = [
-  { id: "quickstart", label: "Quickstart" },
-  { id: "operators", label: "For operators" },
-  { id: "builders", label: "For builders" },
-  { id: "x402", label: "x402 payment" },
-  { id: "api", label: "API reference" },
-  { id: "sdk", label: "SDK reference" },
-  { id: "contracts", label: "Contracts" },
-];
-
-function Code({ children }: { children: React.ReactNode }) {
-  return (
-    <code className="bg-warmdark-light border border-cream/10 px-1.5 py-0.5 font-mono text-[0.85em] text-cream">
-      {children}
-    </code>
-  );
-}
-
-function CodeBlock({ children }: { children: React.ReactNode }) {
-  return (
-    <pre className="bg-warmdark-deep border border-cream/10 px-4 py-3 my-4 overflow-x-auto font-mono text-xs text-cream/90 leading-relaxed">
-      <code>{children}</code>
-    </pre>
-  );
-}
-
-function Section({
-  id,
-  eyebrow,
-  title,
-  children,
-}: {
-  id: string;
-  eyebrow: string;
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section id={id} className="py-10 border-t border-cream/10">
-      <p className="text-[10px] font-mono tracking-[0.3em] text-cream/40 uppercase mb-2">
-        {eyebrow}
-      </p>
-      <h2 className="font-serif text-3xl mb-6">{title}</h2>
-      <div className="space-y-4 text-cream/75 text-sm leading-relaxed">
-        {children}
-      </div>
-    </section>
-  );
-}
+const TOTAL_READ = SECTIONS.reduce((s, x) => s + x.readMin, 0);
 
 export default async function DocsPage() {
   const session = await getSession();
+
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col bg-warmdark">
       <Header showDashboardLink={!!session} />
 
-      <section className="px-6 pt-14 pb-8 max-w-6xl mx-auto w-full">
-        <p className="text-xs tracking-[0.3em] text-cream/60 uppercase mb-3 font-mono">
-          Docs
-        </p>
-        <h1 className="font-serif text-5xl mb-3">Build with Oryn.</h1>
-        <p className="text-cream/60 max-w-2xl">
-          One-page integration guide. For operators installing capabilities into
-          their agent, and builders publishing skills or knowledge packs to the
-          marketplace.
-        </p>
+      {/* Status bar — terminal-style */}
+      <div className="border-b border-cream/10 bg-warmdark-light">
+        <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.25em] text-cream/40">
+          <div className="flex items-center gap-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-orange animate-pulse" />
+            <span>orynworks · docs</span>
+            <span className="text-cream/20">/</span>
+            <span className="text-cream/60">main</span>
+          </div>
+          <div className="hidden md:flex items-center gap-4">
+            <span>v0.1.0</span>
+            <span className="text-cream/20">·</span>
+            <span>{TOTAL_READ} min read</span>
+            <span className="text-cream/20">·</span>
+            <span>{SECTIONS.length} sections</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-[0.18] pointer-events-none"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at center, rgba(232,220,200,0.6) 1px, transparent 1px)",
+            backgroundSize: "22px 22px",
+          }}
+        />
+        <div
+          className="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full pointer-events-none opacity-30 blur-3xl"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(229,115,79,0.5) 0%, transparent 70%)",
+          }}
+        />
+
+        <div className="relative max-w-7xl mx-auto px-6 pt-16 pb-12">
+          <p className="inline-flex items-center gap-2 text-[10px] font-mono tracking-[0.3em] text-orange uppercase mb-6 px-2 py-1 border border-orange/30 bg-orange/5">
+            <span className="w-1 h-1 rounded-full bg-orange" />
+            Documentation
+          </p>
+          <h1 className="font-serif text-5xl md:text-7xl tracking-tight mb-5 leading-[1.05]">
+            Build with <span className="text-orange italic">Oryn</span>
+            <span className="text-cream/40">.</span>
+          </h1>
+          <p className="text-cream/65 text-base md:text-lg max-w-2xl leading-relaxed">
+            A single-page integration guide. For operators installing
+            capabilities into their agent, and builders publishing skills or
+            knowledge packs to the marketplace.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-mono uppercase tracking-[0.25em] text-cream/45">
+            <span>{SECTIONS.length} sections</span>
+            <span className="text-cream/15">·</span>
+            <span>~{TOTAL_READ} min read</span>
+            <span className="text-cream/15">·</span>
+            <a
+              href="https://github.com/orynworks"
+              className="hover:text-orange transition-colors"
+              target="_blank"
+              rel="noreferrer"
+            >
+              view on github →
+            </a>
+          </div>
+        </div>
       </section>
 
-      <section className="px-6 pb-20 max-w-6xl mx-auto w-full flex-1 grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-10">
-        <nav className="hidden lg:block lg:sticky lg:top-6 self-start">
-          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-cream/40 mb-3">
-            On this page
-          </p>
-          <ul className="space-y-2 text-xs font-mono uppercase tracking-wider">
-            {SECTIONS.map((s) => (
-              <li key={s.id}>
-                <a
-                  href={`#${s.id}`}
-                  className="text-cream/60 hover:text-orange transition-colors"
-                >
-                  {s.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <article className="min-w-0">
-          <Section id="quickstart" eyebrow="01" title="Quickstart">
-            <p>
-              Oryn is a marketplace of <strong className="text-cream">skills</strong>{" "}
-              (callable MCP servers) and{" "}
-              <strong className="text-cream">knowledge packs</strong> (queryable
-              datasets) for AI agents. Every capability is registered on Base,
-              billed per use in USDC, and reputation-tracked via on-chain
-              attestations.
-            </p>
-            <p>Install a capability into Claude Desktop:</p>
-            <CodeBlock>
-              {`npx oryn install deep-research --client claude`}
-            </CodeBlock>
-            <p>
-              Or print the config snippet to paste manually (no file writes):
-            </p>
-            <CodeBlock>{`npx oryn install deep-research`}</CodeBlock>
-            <p>
-              Make a direct call (for testing — production agents go through
-              their MCP client):
-            </p>
-            <CodeBlock>
-              {`npx oryn call deep-research --prompt "summarize the latest base ecosystem trends"`}
-            </CodeBlock>
+      {/* Body */}
+      <section className="max-w-7xl mx-auto w-full px-6 pb-24 flex-1 grid grid-cols-1 lg:grid-cols-[1fr_220px] gap-10">
+        <article className="min-w-0 order-2 lg:order-1">
+          <Section
+            id="quickstart"
+            num="01"
+            title="Quickstart"
+            intro="Oryn is a marketplace of MCP capabilities for AI agents. Install one into your client and use it immediately."
+          >
+            <p>Install <em>deep-research</em> into Claude Desktop:</p>
+            <Term title="$ npx oryn install --client claude">{QUICKSTART_INSTALL}</Term>
+            <p>Or print the config snippet to paste manually (no file writes):</p>
+            <Term>{QUICKSTART_PRINT}</Term>
+            <p>Make a direct call for testing (production agents go through their MCP client):</p>
+            <Term>{QUICKSTART_CALL}</Term>
           </Section>
 
-          <Section id="operators" eyebrow="02" title="For operators">
-            <p>
-              You build AI agents. Oryn lets your agent install third-party
-              capabilities and pay per use, with audit trail.
-            </p>
-            <h3 className="font-serif text-xl text-cream mt-6">
-              1. Browse the hub
-            </h3>
+          <Section
+            id="operators"
+            num="02"
+            title="For operators"
+            intro="You build AI agents. Oryn lets your agent install third-party capabilities and pay per use, with an audit trail."
+          >
+            <MiniHeading>Browse the hub</MiniHeading>
             <p>
               Visit{" "}
-              <Link href="/browse" className="text-orange hover:underline">
-                /browse
-              </Link>{" "}
+              <Link href="/browse" className="text-orange hover:underline">/browse</Link>{" "}
               to filter by type (skill / knowledge), category, or price. Free
               capabilities are tagged.
             </p>
-            <h3 className="font-serif text-xl text-cream mt-6">
-              2. Install into your MCP client
-            </h3>
+
+            <MiniHeading>Install into your MCP client</MiniHeading>
             <p>
               On any capability detail page, copy the install command. The SDK
               writes an entry to your client config (Claude Desktop, Cursor) or
               prints it for manual paste.
             </p>
-            <CodeBlock>
-              {`# Auto-write into Claude Desktop config
-npx oryn install <slug> --client claude
+            <Term>{OPERATORS_INSTALL}</Term>
 
-# Cursor
-npx oryn install <slug> --client cursor
-
-# Just print the JSON
-npx oryn install <slug>`}
-            </CodeBlock>
-            <h3 className="font-serif text-xl text-cream mt-6">
-              3. Pay per use (paid capabilities)
-            </h3>
+            <MiniHeading>Pay per use</MiniHeading>
             <p>
               When your agent calls a paid capability, the gateway returns{" "}
               <Code>402 Payment Required</Code> with an x402 challenge. Your
@@ -166,97 +148,60 @@ npx oryn install <slug>`}
             </p>
           </Section>
 
-          <Section id="builders" eyebrow="03" title="For builders">
-            <p>
-              You have an MCP server or curated dataset. Publish it to Oryn,
-              earn USDC per call, build on-chain reputation.
-            </p>
-            <h3 className="font-serif text-xl text-cream mt-6">
-              1. Connect your wallet
-            </h3>
+          <Section
+            id="builders"
+            num="03"
+            title="For builders"
+            intro="You have an MCP server or curated dataset. Publish it to Oryn, earn USDC per call, build on-chain reputation."
+          >
+            <MiniHeading>Connect your wallet</MiniHeading>
             <p>
               Sign in via SIWE on{" "}
-              <Link href="/build" className="text-orange hover:underline">
-                /build
-              </Link>
-              . Your wallet address becomes your builder identity. You can edit
-              your public profile (display name, bio, links) from{" "}
-              <Code>/me</Code>.
+              <Link href="/build" className="text-orange hover:underline">/build</Link>
+              . Your wallet address becomes your builder identity. Edit your
+              public profile from <Code>/me</Code>.
             </p>
-            <h3 className="font-serif text-xl text-cream mt-6">
-              2. Publish a capability
-            </h3>
+
+            <MiniHeading>Publish a capability</MiniHeading>
             <p>
               Fill the form at{" "}
-              <Link href="/build/new" className="text-orange hover:underline">
-                /build/new
-              </Link>
+              <Link href="/build/new" className="text-orange hover:underline">/build/new</Link>
               . On submit, your wallet signs a transaction registering the
-              capability on{" "}
-              <Code>CapabilityRegistry</Code>. Gas is roughly $0.01 on Base.
+              capability on <Code>CapabilityRegistry</Code>. Gas is roughly
+              $0.01 on Base.
             </p>
             <p>
-              Required fields: name, slug, type (skill or knowledge), category,
-              description, host URL, price (USDC). Host URLs pointing to
-              private/internal IPs are rejected.
+              Required: name, slug, type, category, description, host URL,
+              price. Host URLs pointing to private/internal IPs are rejected.
             </p>
-            <h3 className="font-serif text-xl text-cream mt-6">
-              3. Earn and claim
-            </h3>
+
+            <MiniHeading>Earn and claim</MiniHeading>
             <p>
               Every paid call accrues to your balance in{" "}
-              <Code>RevenueEscrow</Code>. The protocol takes a 10% fee. Builders
-              earn 90% of every call.
+              <Code>RevenueEscrow</Code>. The protocol takes 10%. Builders earn
+              90% of every call.
             </p>
-            <CodeBlock>{`Operator pays 1.0000 USDC
-        → 0.9000 USDC → builderBalance[you]
-        → 0.1000 USDC → protocolTreasury`}</CodeBlock>
+            <Term title="$ revenue split (per 1.0000 USDC paid)">{BUILDERS_SPLIT}</Term>
             <p>
-              Withdraw any time from the dashboard at{" "}
-              <Link href="/build" className="text-orange hover:underline">
-                /build
-              </Link>
-              . The Claim button sends{" "}
-              <Code>RevenueEscrow.claim()</Code> from your wallet, transferring
-              USDC to your address.
+              Withdraw any time from{" "}
+              <Link href="/build" className="text-orange hover:underline">/build</Link>
+              . The Claim button sends <Code>RevenueEscrow.claim()</Code> from
+              your wallet, transferring USDC to your address.
             </p>
           </Section>
 
-          <Section id="x402" eyebrow="04" title="x402 payment protocol">
+          <Section
+            id="x402"
+            num="04"
+            title="x402 payment"
+            intro="The Coinbase-led open protocol for HTTP-native micropayments. We use it for per-call billing."
+          >
             <p>
-              x402 is the{" "}
-              <a
-                href="https://github.com/coinbase/x402"
-                target="_blank"
-                rel="noreferrer"
-                className="text-orange hover:underline"
-              >
-                Coinbase-led open protocol
-              </a>{" "}
-              for HTTP-native micropayments. It piggybacks on{" "}
-              <Code>HTTP 402 Payment Required</Code>, with EIP-712 signed
-              payment payloads carried in an{" "}
+              x402 piggybacks on <Code>HTTP 402 Payment Required</Code>, with
+              EIP-712 signed payment payloads carried in an{" "}
               <Code>X-Payment</Code> header.
             </p>
-            <p>Flow:</p>
-            <CodeBlock>
-              {`1. Agent calls a paid capability:
-   POST /v1/skills/<slug>/call
-
-2. Gateway returns 402 with a challenge:
-   WWW-Authenticate: X402 realm="oryn", amount="0.0200"
-
-3. Agent's client builds an EIP-712 payment for amount, signs
-   with the operator's wallet key, retries with:
-   X-Payment: <signed-payload>
-
-4. Gateway verifies signature, nonce uniqueness, USDC allowance.
-   Forwards the call to the builder's host URL.
-
-5. Off-chain ledger records the usage event.
-   Settlement worker batches per-builder accruals
-   and pushes them to RevenueEscrow on a schedule.`}
-            </CodeBlock>
+            <Term title="$ flow ─ one paid call">{X402_FLOW}</Term>
             <p>
               Nonces are stored per-payer for replay protection. The settlement
               worker uses an idempotent lock-and-finalize pattern: events are
@@ -265,209 +210,184 @@ npx oryn install <slug>`}
             </p>
           </Section>
 
-          <Section id="api" eyebrow="05" title="API reference">
-            <p>
-              The gateway exposes two proxy endpoints. Both require a SIWE
-              session cookie (operator identity) and, for paid capabilities, an{" "}
-              <Code>X-Payment</Code> header.
-            </p>
-
-            <h3 className="font-serif text-xl text-cream mt-6">
-              POST /v1/skills/:slug/call
-            </h3>
+          <Section
+            id="api"
+            num="05"
+            title="API reference"
+            intro="Two proxy endpoints. Both require a SIWE session cookie and, for paid capabilities, an X-Payment header."
+          >
+            <MiniHeading>POST /v1/skills/:slug/call</MiniHeading>
             <p>Invoke a skill (MCP server).</p>
-            <CodeBlock>
-              {`curl -X POST https://api.oryn.works/v1/skills/deep-research/call \\
-  -H "Content-Type: application/json" \\
-  -H "Cookie: oryn_session=..." \\
-  -H "X-Payment: <eip712-signed-payload>" \\
-  -d '{"prompt": "..."}'`}
-            </CodeBlock>
+            <Term title="$ curl ─ skill call">{API_SKILL_CURL}</Term>
 
-            <h3 className="font-serif text-xl text-cream mt-6">
-              POST /v1/knowledge/:slug/query
-            </h3>
+            <MiniHeading>POST /v1/knowledge/:slug/query</MiniHeading>
             <p>Query a knowledge pack.</p>
-            <CodeBlock>
-              {`curl -X POST https://api.oryn.works/v1/knowledge/alpha-feed/query \\
-  -H "Content-Type: application/json" \\
-  -H "Cookie: oryn_session=..." \\
-  -H "X-Payment: <eip712-signed-payload>" \\
-  -d '{"prompt": "..."}'`}
-            </CodeBlock>
+            <Term title="$ curl ─ knowledge query">{API_KNOWLEDGE_CURL}</Term>
 
-            <h3 className="font-serif text-xl text-cream mt-6">
-              Response shape
-            </h3>
-            <CodeBlock>
-              {`// 200 OK — capability returned a result
-{
-  "ok": true,
-  "data": <upstream response>,
-  "costUsdc": "0.0200",
-  "latencyMs": 412
-}
-
-// 402 Payment Required — missing or invalid x402 header
-{
-  "error": "payment required",
-  "priceUsdc": "0.0200",
-  "protocol": "x402",
-  "version": "1"
-}
-
-// 502 — upstream host failed or was blocked
-{
-  "error": "upstream_502" | "upstream_host_blocked" | "upstream_timeout"
-}`}
-            </CodeBlock>
+            <MiniHeading>Response shapes</MiniHeading>
+            <Term title="$ http responses">{API_RESPONSES}</Term>
           </Section>
 
-          <Section id="sdk" eyebrow="06" title="SDK reference">
-            <p>
-              The <Code>oryn</Code> npm package ships a CLI plus a programmatic
-              client.
-            </p>
+          <Section
+            id="sdk"
+            num="06"
+            title="SDK reference"
+            intro="The oryn npm package ships a CLI plus a programmatic client."
+          >
+            <MiniHeading>CLI</MiniHeading>
+            <Term title="$ oryn --help">{SDK_CLI}</Term>
 
-            <h3 className="font-serif text-xl text-cream mt-6">CLI</h3>
-            <CodeBlock>
-              {`oryn install <slug> [--client claude|cursor|print] [--gateway URL]
-oryn call    <slug> --prompt "..." [--gateway URL] [--auth TOKEN]
-oryn query   <slug> --prompt "..." [--gateway URL] [--auth TOKEN]
-oryn ping    [--gateway URL]
-oryn --version`}
-            </CodeBlock>
+            <MiniHeading>Programmatic</MiniHeading>
+            <Term title="$ vim my-agent.ts">{SDK_PROGRAMMATIC}</Term>
 
-            <h3 className="font-serif text-xl text-cream mt-6">Programmatic</h3>
-            <CodeBlock>
-              {`import { OrynClient } from "oryn";
-
-const client = new OrynClient({
-  gatewayUrl: "https://api.oryn.works",
-  authToken: process.env.ORYN_AUTH_TOKEN,
-});
-
-const result = await client.query("alpha-feed", {
-  prompt: "trending on base, last 24h"
-});`}
-            </CodeBlock>
-
-            <h3 className="font-serif text-xl text-cream mt-6">
-              Environment variables
-            </h3>
-            <table className="w-full text-xs font-mono border border-cream/10 my-4">
-              <tbody>
-                <tr className="border-b border-cream/10">
-                  <td className="px-3 py-2 text-cream/80">
-                    <Code>ORYN_GATEWAY_URL</Code>
-                  </td>
-                  <td className="px-3 py-2 text-cream/50">
+            <MiniHeading>Environment</MiniHeading>
+            <div className="my-4 border border-cream/10 bg-warmdark-light overflow-hidden">
+              <div className="grid grid-cols-[1fr_2fr] divide-x divide-cream/10 text-[12.5px] font-mono">
+                <div className="bg-warmdark-deep">
+                  <div className="px-4 py-2 text-[10px] uppercase tracking-[0.25em] text-cream/35 border-b border-cream/10">
+                    var
+                  </div>
+                  <div className="px-4 py-3 text-orange/90 border-b border-cream/10">
+                    ORYN_GATEWAY_URL
+                  </div>
+                  <div className="px-4 py-3 text-orange/90">ORYN_AUTH_TOKEN</div>
+                </div>
+                <div>
+                  <div className="px-4 py-2 text-[10px] uppercase tracking-[0.25em] text-cream/35 border-b border-cream/10">
+                    purpose
+                  </div>
+                  <div className="px-4 py-3 text-cream/70 border-b border-cream/10">
                     Override default gateway URL
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-3 py-2 text-cream/80">
-                    <Code>ORYN_AUTH_TOKEN</Code>
-                  </td>
-                  <td className="px-3 py-2 text-cream/50">
+                  </div>
+                  <div className="px-4 py-3 text-cream/70">
                     Session bearer token (required for paid capabilities)
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                  </div>
+                </div>
+              </div>
+            </div>
           </Section>
 
-          <Section id="contracts" eyebrow="07" title="Contracts">
-            <p>
-              Source:{" "}
-              <Code>packages/contracts/src/CapabilityRegistry.sol</Code>,{" "}
-              <Code>packages/contracts/src/RevenueEscrow.sol</Code>.
-            </p>
-
-            <h3 className="font-serif text-xl text-cream mt-6">
-              CapabilityRegistry
-            </h3>
+          <Section
+            id="contracts"
+            num="07"
+            title="Contracts"
+            intro="Source: packages/contracts/src/CapabilityRegistry.sol, RevenueEscrow.sol."
+          >
+            <MiniHeading>CapabilityRegistry</MiniHeading>
             <p>
               Catalog of registered capabilities. Each entry is keyed by{" "}
               <Code>keccak256(slug)</Code> and records the builder address,
               price, type, status, and metadata hash.
             </p>
 
-            <h3 className="font-serif text-xl text-cream mt-6">RevenueEscrow</h3>
+            <MiniHeading>RevenueEscrow</MiniHeading>
             <p>
               Holds USDC from paid calls. Splits 90/10 between builder and
               protocol on every <Code>settle()</Code>. Builders call{" "}
               <Code>claim()</Code> to withdraw their balance.
             </p>
 
-            <h3 className="font-serif text-xl text-cream mt-6">Addresses</h3>
-            <table className="w-full text-xs font-mono border border-cream/10 my-4">
-              <thead>
-                <tr className="border-b border-cream/10 bg-warmdark-light text-cream/60">
-                  <th className="px-3 py-2 text-left">Contract</th>
-                  <th className="px-3 py-2 text-left">Network</th>
-                  <th className="px-3 py-2 text-left">Address</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-cream/10">
-                  <td className="px-3 py-2 text-cream/80">
-                    CapabilityRegistry
-                  </td>
-                  <td className="px-3 py-2 text-cream/60">Base Sepolia</td>
-                  <td className="px-3 py-2 text-cream">
-                    <a
-                      href="https://sepolia.basescan.org/address/0xB9a212DF77AEb7F4201d435381D68Ec10f5BAB5d"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="hover:text-orange"
-                    >
-                      0xB9a2…BAB5d
-                    </a>
-                  </td>
-                </tr>
-                <tr className="border-b border-cream/10">
-                  <td className="px-3 py-2 text-cream/80">RevenueEscrow</td>
-                  <td className="px-3 py-2 text-cream/60">Base Sepolia</td>
-                  <td className="px-3 py-2 text-cream">
-                    <a
-                      href="https://sepolia.basescan.org/address/0x6b29663C0802F7Bc8B8750F17627a82258EE6e31"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="hover:text-orange"
-                    >
-                      0x6b29…6e31
-                    </a>
-                  </td>
-                </tr>
-                <tr className="border-b border-cream/10">
-                  <td className="px-3 py-2 text-cream/80">USDC (testnet)</td>
-                  <td className="px-3 py-2 text-cream/60">Base Sepolia</td>
-                  <td className="px-3 py-2 text-cream">
-                    <a
-                      href="https://sepolia.basescan.org/address/0x036CbD53842c5426634e7929541eC2318f3dCF7e"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="hover:text-orange"
-                    >
-                      0x036C…CF7e
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-3 py-2 text-cream/80" colSpan={3}>
-                    <span className="text-cream/40">
-                      Base mainnet addresses publish here after launch.
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <MiniHeading>Deployed addresses</MiniHeading>
+            <div className="my-4 border border-cream/10 bg-warmdark-light overflow-hidden">
+              <div className="grid grid-cols-[1.4fr_1fr_2fr] text-[12.5px] font-mono">
+                <div className="px-4 py-2 text-[10px] uppercase tracking-[0.25em] text-cream/35 bg-warmdark-deep border-b border-cream/10">
+                  contract
+                </div>
+                <div className="px-4 py-2 text-[10px] uppercase tracking-[0.25em] text-cream/35 bg-warmdark-deep border-b border-cream/10">
+                  network
+                </div>
+                <div className="px-4 py-2 text-[10px] uppercase tracking-[0.25em] text-cream/35 bg-warmdark-deep border-b border-cream/10">
+                  address
+                </div>
+                {CONTRACT_ROWS.map((row) => (
+                  <ContractRow key={row.contract} {...row} />
+                ))}
+                <div className="px-4 py-3 text-cream/40 col-span-3 italic">
+                  Base mainnet addresses publish here after launch.
+                </div>
+              </div>
+            </div>
           </Section>
+
+          {/* End-of-docs cursor */}
+          <div className="mt-12 flex items-center gap-2 text-cream/30 font-mono text-xs">
+            <span className="text-orange">$</span>
+            <span className="w-2 h-4 bg-orange/70 animate-pulse" />
+            <span className="ml-3">end of docs · v0.1.0</span>
+          </div>
         </article>
+
+        {/* Sticky TOC */}
+        <aside className="hidden lg:block order-1 lg:order-2">
+          <div className="sticky top-6 border border-cream/10 bg-warmdark-light">
+            <div className="px-4 py-3 border-b border-cream/10 flex items-center justify-between">
+              <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-cream/40">
+                On this page
+              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-orange animate-pulse" />
+            </div>
+            <ul className="py-2">
+              {SECTIONS.map((s) => (
+                <li key={s.id}>
+                  <a
+                    href={`#${s.id}`}
+                    className="group flex items-center gap-3 px-4 py-2.5 hover:bg-warmdark transition-colors"
+                  >
+                    <span className="text-[10px] font-mono text-cream/30 group-hover:text-orange transition-colors w-5">
+                      {s.num}
+                    </span>
+                    <span className="text-xs font-mono uppercase tracking-wider text-cream/65 group-hover:text-cream transition-colors">
+                      {s.label}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <div className="px-4 py-3 border-t border-cream/10">
+              <a
+                href="https://github.com/orynworks"
+                target="_blank"
+                rel="noreferrer"
+                className="text-[10px] font-mono uppercase tracking-[0.25em] text-cream/40 hover:text-orange transition-colors flex items-center gap-2"
+              >
+                <span>github</span>
+                <span>↗</span>
+              </a>
+            </div>
+          </div>
+        </aside>
       </section>
 
       <Footer />
     </main>
+  );
+}
+
+function ContractRow({
+  contract,
+  network,
+  shortAddr,
+  explorerUrl,
+}: {
+  contract: string;
+  network: string;
+  shortAddr: string;
+  explorerUrl: string;
+}) {
+  return (
+    <>
+      <div className="px-4 py-3 text-cream/85 border-b border-cream/10">{contract}</div>
+      <div className="px-4 py-3 text-cream/55 border-b border-cream/10">{network}</div>
+      <div className="px-4 py-3 border-b border-cream/10">
+        <a
+          href={explorerUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="text-orange/90 hover:text-orange"
+        >
+          {shortAddr} ↗
+        </a>
+      </div>
+    </>
   );
 }
