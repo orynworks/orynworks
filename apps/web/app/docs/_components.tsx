@@ -59,7 +59,7 @@ export function Section({
   id: string;
   num: string;
   title: string;
-  intro?: string;
+  intro?: ReactNode;
   children: ReactNode;
 }) {
   return (

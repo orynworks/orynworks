@@ -9,6 +9,8 @@ import {
   QUICKSTART_INSTALL,
   QUICKSTART_PRINT,
   QUICKSTART_CALL,
+  QUICKSTART_ANON_CURL,
+  LIVE_SLUGS,
   OPERATORS_INSTALL,
   BUILDERS_SPLIT,
   X402_FLOW,
@@ -71,7 +73,7 @@ export default async function DocsPage() {
             Documentation
           </p>
           <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl tracking-tight mb-5 leading-[1.05]">
-            Build with <span className="text-orange italic">Oryn Works</span>
+            Build with <span className="text-orange italic">orynworks</span>
             <span className="text-cream/40">.</span>
           </h1>
           <p className="text-cream/65 text-base md:text-lg max-w-2xl leading-relaxed">
@@ -85,7 +87,7 @@ export default async function DocsPage() {
             <span>~{TOTAL_READ} min read</span>
             <span className="text-cream/15">·</span>
             <a
-              href="https://github.com/orynworks"
+              href="https://github.com/orynworks/orynworks"
               className="hover:text-orange transition-colors"
               target="_blank"
               rel="noreferrer"
@@ -105,12 +107,14 @@ export default async function DocsPage() {
             title="Quickstart"
             intro="Oryn Works is a marketplace of MCP capabilities for AI agents. Install one into your client and use it immediately."
           >
-            <p>Install <em>deep-research</em> into Claude Desktop:</p>
+            <p>Install <em>token-price</em> into Claude Desktop (free, live on Base mainnet):</p>
             <Term title="$ npx orynworks install --client claude">{QUICKSTART_INSTALL}</Term>
             <p>Or print the config snippet to paste manually (no file writes):</p>
             <Term>{QUICKSTART_PRINT}</Term>
             <p>Make a direct call for testing (production agents go through their MCP client):</p>
             <Term>{QUICKSTART_CALL}</Term>
+            <p>All 18 launch capabilities are currently free — no wallet, no session cookie. Smallest possible test:</p>
+            <Term title="$ curl ─ anonymous free call">{QUICKSTART_ANON_CURL}</Term>
           </Section>
 
           <Section
@@ -126,6 +130,14 @@ export default async function DocsPage() {
               to filter by type (skill / knowledge), category, or price. Free
               capabilities are tagged.
             </p>
+
+            <MiniHeading>Live capabilities</MiniHeading>
+            <p>18 capabilities are live on Base mainnet today. All free at launch:</p>
+            <div className="flex flex-wrap gap-2 my-4">
+              {LIVE_SLUGS.map((slug) => (
+                <Code key={slug}>{slug}</Code>
+              ))}
+            </div>
 
             <MiniHeading>Install into your MCP client</MiniHeading>
             <p>
@@ -197,6 +209,9 @@ export default async function DocsPage() {
             intro="The Coinbase-led open protocol for HTTP-native micropayments. We use it for per-call billing."
           >
             <p>
+              Skip this section if you&apos;re only calling free capabilities — none of the 18 currently live caps use x402.
+            </p>
+            <p>
               x402 piggybacks on <Code>HTTP 402 Payment Required</Code>, with
               EIP-712 signed payment payloads carried in an{" "}
               <Code>X-Payment</Code> header.
@@ -214,14 +229,14 @@ export default async function DocsPage() {
             id="api"
             num="05"
             title="API reference"
-            intro="Two proxy endpoints. Both require a SIWE session cookie and, for paid capabilities, an X-Payment header."
+            intro="Both endpoints accept anonymous calls for free capabilities. Paid capabilities additionally require an X-Payment header (EIP-712 signed payload). The request body is forwarded verbatim to the upstream capability host — its schema is per-capability."
           >
             <MiniHeading>POST /v1/skills/:slug/call</MiniHeading>
-            <p>Invoke a skill (MCP server).</p>
+            <p>Call a skill capability. Body is forwarded as-is to the builder&apos;s host URL.</p>
             <Term title="$ curl ─ skill call">{API_SKILL_CURL}</Term>
 
             <MiniHeading>POST /v1/knowledge/:slug/query</MiniHeading>
-            <p>Query a knowledge pack.</p>
+            <p>Call a knowledge capability. Body is forwarded as-is to the builder&apos;s host URL.</p>
             <Term title="$ curl ─ knowledge query">{API_KNOWLEDGE_CURL}</Term>
 
             <MiniHeading>Response shapes</MiniHeading>
@@ -232,7 +247,21 @@ export default async function DocsPage() {
             id="sdk"
             num="06"
             title="SDK reference"
-            intro="The orynworks npm package ships a CLI plus a programmatic client."
+            intro={(
+              <>
+                The{" "}
+                <a
+                  href="https://www.npmjs.com/package/orynworks"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-orange hover:underline"
+                >
+                  orynworks npm package
+                </a>{" "}
+                ships a CLI plus a programmatic client. Install with{" "}
+                <Code>npm i orynworks</Code>.
+              </>
+            )}
           >
             <MiniHeading>CLI</MiniHeading>
             <Term title="$ orynworks --help">{SDK_CLI}</Term>
@@ -260,7 +289,7 @@ export default async function DocsPage() {
                     Override default gateway URL
                   </div>
                   <div className="px-4 py-3 text-cream/70">
-                    Session bearer token (required for paid capabilities)
+                    Optional session bearer token. Paid capabilities require an X-Payment header instead — the SDK builds it from your wallet when configured.
                   </div>
                 </div>
               </div>
@@ -342,7 +371,7 @@ export default async function DocsPage() {
             </ul>
             <div className="px-4 py-3 border-t border-cream/10">
               <a
-                href="https://github.com/orynworks"
+                href="https://github.com/orynworks/orynworks"
                 target="_blank"
                 rel="noreferrer"
                 className="text-[10px] font-mono uppercase tracking-[0.25em] text-cream/40 hover:text-orange transition-colors flex items-center gap-2"

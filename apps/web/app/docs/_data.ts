@@ -2,24 +2,27 @@
 // Keeping them out of page.tsx avoids Turbopack HMR memory blow-ups on
 // pages that mix many large multi-line template literals with JSX.
 
-export const QUICKSTART_INSTALL = `$ npx orynworks install deep-research --client claude
-→ Resolving capability...
-→ Verified on-chain at 0xB9a2…BAB5d
-✓ Installed deep-research@1.2.0`;
+export const QUICKSTART_INSTALL = `$ npx orynworks install token-price --client claude
+→ wrote mcpServers.oryn-token-price to ~/Library/Application Support/Claude/claude_desktop_config.json
+→ restart Claude Desktop to pick up the new server`;
 
-export const QUICKSTART_PRINT = `$ npx orynworks install deep-research
+export const QUICKSTART_PRINT = `$ npx orynworks install token-price
 
 # Add to your MCP-aware client config:
 {
   "mcpServers": {
-    "oryn-deep-research": {
+    "oryn-token-price": {
       "type": "http",
-      "url": "https://api.oryn.works/v1/skills/deep-research/call"
+      "url": "https://api.oryn.works/v1/skills/token-price/call"
     }
   }
 }`;
 
-export const QUICKSTART_CALL = `$ npx orynworks call deep-research --prompt "summarize latest base ecosystem trends"`;
+export const QUICKSTART_CALL = `$ npx orynworks call echo-debug --prompt '{}'`;
+
+export const QUICKSTART_ANON_CURL = `curl -X POST https://api.oryn.works/v1/skills/echo-debug/call \\
+  -H "Content-Type: application/json" \\
+  -d '{}'`;
 
 export const OPERATORS_INSTALL = `# Auto-write into Claude Desktop config
 $ npx orynworks install <slug> --client claude
@@ -51,17 +54,15 @@ export const X402_FLOW = `1. Agent calls a paid capability:
    Settlement worker batches per-builder accruals and
    pushes them to RevenueEscrow on a schedule.`;
 
-export const API_SKILL_CURL = `curl -X POST https://api.oryn.works/v1/skills/deep-research/call \\
+export const API_SKILL_CURL = `curl -X POST https://api.oryn.works/v1/skills/token-price/call \\
   -H "Content-Type: application/json" \\
-  -H "Cookie: oryn_session=..." \\
-  -H "X-Payment: <eip712-signed-payload>" \\
-  -d '{"prompt": "..."}'`;
+  -d '{"symbol":"ETH"}'
+# Paid capabilities additionally require:  -H 'X-Payment: <eip712-signed-payload>'`;
 
-export const API_KNOWLEDGE_CURL = `curl -X POST https://api.oryn.works/v1/knowledge/alpha-feed/query \\
+export const API_KNOWLEDGE_CURL = `curl -X POST https://api.oryn.works/v1/knowledge/base-live-block/query \\
   -H "Content-Type: application/json" \\
-  -H "Cookie: oryn_session=..." \\
-  -H "X-Payment: <eip712-signed-payload>" \\
-  -d '{"prompt": "..."}'`;
+  -d '{}'
+# Paid capabilities additionally require: -H 'X-Payment: <eip712-signed-payload>'`;
 
 export const API_RESPONSES = `// 200 OK
 {
@@ -96,12 +97,10 @@ export const SDK_PROGRAMMATIC = `import { OrynClient } from "orynworks";
 
 const client = new OrynClient({
   gatewayUrl: "https://api.oryn.works",
-  authToken: process.env.ORYN_AUTH_TOKEN,
 });
 
-const result = await client.query("alpha-feed", {
-  prompt: "trending on base, last 24h"
-});`;
+// For knowledge caps use client.query("base-live-block", {})
+const result = await client.call("token-price", { symbol: "ETH" });`;
 
 export type Section = {
   id: string;
@@ -153,4 +152,25 @@ export const CONTRACT_ROWS: ContractRow[] = [
     explorerUrl:
       "https://basescan.org/address/0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   },
+];
+
+export const LIVE_SLUGS: string[] = [
+  "echo-debug",
+  "base-live-block",
+  "ens-resolver",
+  "github-trending",
+  "token-price",
+  "trending-tokens",
+  "top-gainers",
+  "dex-pairs",
+  "defi-tvl",
+  "wallet-portfolio",
+  "base-gas",
+  "erc20-info",
+  "tx-lookup",
+  "uniswap-quote",
+  "base-pulse",
+  "narrative-tokens",
+  "prediction-markets",
+  "base-movers",
 ];
