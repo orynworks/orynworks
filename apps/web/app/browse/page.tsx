@@ -26,7 +26,7 @@ type SearchParams = Promise<{
   page?: string;
 }>;
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 24;
 
 function parseSort(raw: string | undefined): SortMode | undefined {
   if (raw === "popular" || raw === "price-asc" || raw === "price-desc" || raw === "recent") return raw;
