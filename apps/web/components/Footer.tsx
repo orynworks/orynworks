@@ -17,7 +17,7 @@ export function Footer() {
 
         <div className="grid grid-cols-2 gap-10 text-xs font-mono uppercase tracking-wider">
           <div>
-            <p className="text-cream/40 mb-3">Product</p>
+            <p className="text-cream/40 mb-3">product</p>
             <ul className="space-y-2">
               <li><Link href="/browse" className="text-cream/70 hover:text-orange">Browse</Link></li>
               <li><Link href="/build" className="text-cream/70 hover:text-orange">Build</Link></li>
@@ -25,10 +25,10 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <p className="text-cream/40 mb-3">Community</p>
+            <p className="text-cream/40 mb-3">community</p>
             <ul className="space-y-2">
-              <li><a href="https://x.com/orynworks" target="_blank" rel="noreferrer" className="text-cream/70 hover:text-orange">Twitter</a></li>
-              <li><a href="https://github.com/orynworks" target="_blank" rel="noreferrer" className="text-cream/70 hover:text-orange">GitHub</a></li>
+              <li><a href="https://x.com/orynworks" target="_blank" rel="noreferrer" className="text-cream/70 hover:text-orange">x</a></li>
+              <li><a href="https://github.com/orynworks" target="_blank" rel="noreferrer" className="text-cream/70 hover:text-orange">github</a></li>
             </ul>
           </div>
         </div>

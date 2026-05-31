@@ -71,7 +71,7 @@ export default async function DocsPage() {
             Documentation
           </p>
           <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl tracking-tight mb-5 leading-[1.05]">
-            Build with <span className="text-orange italic">Oryn</span>
+            Build with <span className="text-orange italic">Oryn Works</span>
             <span className="text-cream/40">.</span>
           </h1>
           <p className="text-cream/65 text-base md:text-lg max-w-2xl leading-relaxed">
@@ -103,7 +103,7 @@ export default async function DocsPage() {
             id="quickstart"
             num="01"
             title="Quickstart"
-            intro="Oryn is a marketplace of MCP capabilities for AI agents. Install one into your client and use it immediately."
+            intro="Oryn Works is a marketplace of MCP capabilities for AI agents. Install one into your client and use it immediately."
           >
             <p>Install <em>deep-research</em> into Claude Desktop:</p>
             <Term title="$ npx orynworks install --client claude">{QUICKSTART_INSTALL}</Term>
@@ -117,7 +117,7 @@ export default async function DocsPage() {
             id="operators"
             num="02"
             title="For operators"
-            intro="You build AI agents. Oryn lets your agent install third-party capabilities and pay per use, with an audit trail."
+            intro="You build AI agents. Oryn Works lets your agent install third-party capabilities and pay per use, with an audit trail."
           >
             <MiniHeading>Browse the hub</MiniHeading>
             <p>
@@ -152,7 +152,7 @@ export default async function DocsPage() {
             id="builders"
             num="03"
             title="For builders"
-            intro="You have an MCP server or curated dataset. Publish it to Oryn, earn USDC per call, build on-chain reputation."
+            intro="You have an MCP server or curated dataset. Publish it to Oryn Works, earn USDC per call, build on-chain reputation."
           >
             <MiniHeading>Connect your wallet</MiniHeading>
             <p>
@@ -232,7 +232,7 @@ export default async function DocsPage() {
             id="sdk"
             num="06"
             title="SDK reference"
-            intro="The oryn npm package ships a CLI plus a programmatic client."
+            intro="The orynworks npm package ships a CLI plus a programmatic client."
           >
             <MiniHeading>CLI</MiniHeading>
             <Term title="$ oryn --help">{SDK_CLI}</Term>

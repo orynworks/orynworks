@@ -35,7 +35,7 @@ export function TerminalDemo() {
         {/* Step 2: query */}
         <div>
           <span className="text-orange">$</span>{" "}
-          <span className="text-cream">oryn query alpha-feed \</span>
+          <span className="text-cream">orynworks query alpha-feed \</span>
         </div>
         <div className="text-cream/90 pl-4">
           --prompt <span className="text-cream/70">"trending on base, last 24h"</span>

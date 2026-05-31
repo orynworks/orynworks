@@ -87,12 +87,12 @@ export const API_RESPONSES = `// 200 OK
 }`;
 
 export const SDK_CLI = `orynworks install <slug> [--client claude|cursor|print] [--gateway URL]
-oryn call    <slug> --prompt "..." [--gateway URL] [--auth TOKEN]
-oryn query   <slug> --prompt "..." [--gateway URL] [--auth TOKEN]
-oryn ping    [--gateway URL]
-oryn --version`;
+orynworks call    <slug> --prompt "..." [--gateway URL] [--auth TOKEN]
+orynworks query   <slug> --prompt "..." [--gateway URL] [--auth TOKEN]
+orynworks ping    [--gateway URL]
+orynworks --version`;
 
-export const SDK_PROGRAMMATIC = `import { OrynClient } from "oryn";
+export const SDK_PROGRAMMATIC = `import { OrynClient } from "orynworks";
 
 const client = new OrynClient({
   gatewayUrl: "https://api.oryn.works",
