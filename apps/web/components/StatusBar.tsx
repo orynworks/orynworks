@@ -20,9 +20,9 @@ export function StatusBar() {
         <div className="hidden md:flex items-center gap-4">
           <span>main</span>
           <span className="text-cream/20">·</span>
-          <span>base sepolia</span>
+          <span>base mainnet</span>
           <span className="text-cream/20">·</span>
-          <span className="text-cream/60">testnet</span>
+          <span className="text-cream/60">live</span>
         </div>
       </div>
     </div>

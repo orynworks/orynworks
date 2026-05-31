@@ -131,26 +131,26 @@ export type ContractRow = {
 export const CONTRACT_ROWS: ContractRow[] = [
   {
     contract: "CapabilityRegistry",
-    network: "Base Sepolia",
-    shortAddr: "0xB9a2…BAB5d",
-    fullAddr: "0xB9a212DF77AEb7F4201d435381D68Ec10f5BAB5d",
+    network: "Base mainnet",
+    shortAddr: "0xDa94…6c37",
+    fullAddr: "0xDa94bD88aD764EE6eA42Cf450d3fC2f816BA6c37",
     explorerUrl:
-      "https://sepolia.basescan.org/address/0xB9a212DF77AEb7F4201d435381D68Ec10f5BAB5d",
+      "https://basescan.org/address/0xDa94bD88aD764EE6eA42Cf450d3fC2f816BA6c37",
   },
   {
     contract: "RevenueEscrow",
-    network: "Base Sepolia",
-    shortAddr: "0x6b29…6e31",
-    fullAddr: "0x6b29663C0802F7Bc8B8750F17627a82258EE6e31",
+    network: "Base mainnet",
+    shortAddr: "0x9339…0a10",
+    fullAddr: "0x93397efB596aD82254FB047daa53Ac68c3E70a10",
     explorerUrl:
-      "https://sepolia.basescan.org/address/0x6b29663C0802F7Bc8B8750F17627a82258EE6e31",
+      "https://basescan.org/address/0x93397efB596aD82254FB047daa53Ac68c3E70a10",
   },
   {
-    contract: "USDC (testnet)",
-    network: "Base Sepolia",
-    shortAddr: "0x036C…CF7e",
-    fullAddr: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+    contract: "USDC",
+    network: "Base mainnet",
+    shortAddr: "0x8335…2913",
+    fullAddr: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
     explorerUrl:
-      "https://sepolia.basescan.org/address/0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+      "https://basescan.org/address/0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   },
 ];

@@ -105,37 +105,25 @@ basedeploy2/
 
 ---
 
-## 6. Smart Contracts
+## 6. Smart Contracts — Base Mainnet
 
 ### `CapabilityRegistry.sol`
 On-chain catalog: each capability has entry `(slug, builder, host, priceWei, version)`. Builders `register()` new capabilities; anyone reads via `getCapability(slugHash)`. Owner can update or deprecate.
 
-| Network | Address |
-|---|---|
-| **Base mainnet** | `0xDa94bD88aD764EE6eA42Cf450d3fC2f816BA6c37` |
-| Base Sepolia | `0xB9a212DF77AEb7F4201d435381D68Ec10f5BAB5d` |
+**Address:** `0xDa94bD88aD764EE6eA42Cf450d3fC2f816BA6c37`
 
 ### `RevenueEscrow.sol`
 Holds USDC from paid calls. Splits 90/10 between builder and protocol on every `settle()`. Builders `claim()` to withdraw. Owner withdraws protocol treasury via `withdrawProtocol()`.
 
-| Network | Address |
-|---|---|
-| **Base mainnet** | `0x93397efB596aD82254FB047daa53Ac68c3E70a10` |
-| Base Sepolia | `0x6b29663C0802F7Bc8B8750F17627a82258EE6e31` |
+**Address:** `0x93397efB596aD82254FB047daa53Ac68c3E70a10`
 
-### Deploy status
-- ✅ Sepolia: deployed + verified on BaseScan
-- ✅ Mainnet: deployed 2026-05-31 + verification submitted (gas burned: 0.0000259 ETH)
-
-### Deploy config (mainnet — current)
-- Chain ID: `8453`
-- USDC (mainnet): `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`
+### Deploy config
+- Chain: Base mainnet (`8453`)
+- USDC: `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`
 - Deployer + Protocol Owner: `0x3c0058Ea6178548573922adC8D9aF5B1bd5A703D` (single wallet, both roles)
-
-### Deploy config (testnet — Sepolia)
-- Chain ID: `84532`
-- USDC (Sepolia): `0x036CbD53842c5426634e7929541eC2318f3dCF7e`
-- Deployer + Protocol Owner: `0xc07D4A0f6379F119e162Dedf0F67F7648D02Fd20`
+- Deployed: 2026-05-31
+- Verification: submitted to BaseScan (Etherscan V2 API)
+- Gas burned on deploy: ~0.0000259 ETH
 
 ---
 

@@ -302,9 +302,6 @@ export default async function DocsPage() {
                 {CONTRACT_ROWS.map((row) => (
                   <ContractRow key={row.contract} {...row} />
                 ))}
-                <div className="px-4 py-3 text-cream/40 col-span-3 italic">
-                  Base mainnet addresses publish here after launch.
-                </div>
               </div>
             </div>
           </Section>
