@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { unstable_cache } from "next/cache";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { BrowseFilters } from "@/components/BrowseFilters";
@@ -14,6 +15,22 @@ import {
   type SortMode,
   type PriceFilter,
 } from "@oryn/db";
+
+// DB reads aren't `fetch()`, so segment-level revalidate doesn't cache them.
+// Wrap in unstable_cache keyed by the full filter set so each unique filter
+// combination is cached independently.
+const getCachedBrowse = unstable_cache(
+  async (filters: ListFilters, limit: number, offset: number) => {
+    const db = getDb();
+    const [capabilities, total] = await Promise.all([
+      listPublishedCapabilities(db, { ...filters, limit, offset }),
+      countPublishedCapabilities(db, filters),
+    ]);
+    return { capabilities, total };
+  },
+  ["browse-capabilities"],
+  { revalidate: 30, tags: ["capabilities"] }
+);
 
 type SearchParams = Promise<{
   type?: string;
@@ -66,15 +83,11 @@ export default async function BrowsePage({
     builderAddress,
   };
 
-  const db = getDb();
-  const [capabilities, total] = await Promise.all([
-    listPublishedCapabilities(db, {
-      ...queryFilters,
-      limit: PAGE_SIZE,
-      offset,
-    }),
-    countPublishedCapabilities(db, queryFilters),
-  ]);
+  const { capabilities, total } = await getCachedBrowse(
+    queryFilters,
+    PAGE_SIZE,
+    offset
+  );
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);

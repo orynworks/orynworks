@@ -1,15 +1,66 @@
 import { notFound } from "next/navigation";
+import { unstable_cache } from "next/cache";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { InstallSnippet } from "@/components/InstallSnippet";
 import { StatusBar } from "@/components/StatusBar";
 import { getDb } from "@/lib/db";
-import { getCapabilityBySlug, getUsageStats, getWalletById } from "@oryn/db";
+import {
+  getCapabilityBySlug,
+  getUsageStats,
+  getWalletById,
+  listPublishedCapabilities,
+} from "@oryn/db";
 
 type RouteParams = Promise<{ slug: string }>;
 
 export const revalidate = 60;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  // Pre-render all published capability slugs at build time.
+  // Defensive: if the DB is unreachable during build, fall back to
+  // empty list and let ISR generate pages on first request.
+  try {
+    const db = getDb();
+    const caps = await listPublishedCapabilities(db, { limit: 200 });
+    return caps.map((c) => ({ slug: c.slug }));
+  } catch {
+    return [];
+  }
+}
+
+// DB reads are not `fetch()` calls, so the segment-level `revalidate = 60`
+// does NOT cache them on its own. Wrap each read in `unstable_cache` so the
+// page can actually be served from cache between requests.
+const getCachedCapabilityBySlug = unstable_cache(
+  async (slug: string) => {
+    const db = getDb();
+    return getCapabilityBySlug(db, slug);
+  },
+  ["capability-by-slug"],
+  { revalidate: 60, tags: ["capabilities"] }
+);
+
+const getCachedUsageStats = unstable_cache(
+  async (capabilityId: string) => {
+    const db = getDb();
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    return getUsageStats(db, capabilityId, sevenDaysAgo);
+  },
+  ["capability-usage-stats"],
+  { revalidate: 60, tags: ["usage"] }
+);
+
+const getCachedBuilderById = unstable_cache(
+  async (builderId: string) => {
+    const db = getDb();
+    return getWalletById(db, builderId);
+  },
+  ["wallet-by-id"],
+  { revalidate: 300, tags: ["wallets"] }
+);
 
 export default async function CapabilityDetailPage({
   params,
@@ -18,17 +69,15 @@ export default async function CapabilityDetailPage({
 }) {
   const { slug } = await params;
 
-  const db = getDb();
-  const capability = await getCapabilityBySlug(db, slug);
+  const capability = await getCachedCapabilityBySlug(slug);
 
   if (!capability || capability.status !== "published") {
     notFound();
   }
 
-  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   const [stats, builder] = await Promise.all([
-    getUsageStats(db, capability.id, sevenDaysAgo),
-    getWalletById(db, capability.builderId),
+    getCachedUsageStats(capability.id),
+    getCachedBuilderById(capability.builderId),
   ]);
   const builderAddress = builder?.address ?? capability.builderId;
   const builderShort = `${builderAddress.slice(0, 6)}…${builderAddress.slice(-4)}`;

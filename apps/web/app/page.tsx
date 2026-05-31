@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { unstable_cache } from "next/cache";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CapabilityCard } from "@/components/CapabilityCard";
@@ -10,11 +11,30 @@ import { listFeaturedCapabilities, getLandingStats } from "@oryn/db";
 
 export const revalidate = 30;
 
+// DB reads aren't `fetch()`, so segment-level revalidate doesn't cache them.
+// Wrap in unstable_cache so the home page can serve from ISR cache.
+const getCachedFeatured = unstable_cache(
+  async () => {
+    const db = getDb();
+    return listFeaturedCapabilities(db, 6);
+  },
+  ["landing-featured"],
+  { revalidate: 30, tags: ["capabilities"] }
+);
+
+const getCachedLandingStats = unstable_cache(
+  async () => {
+    const db = getDb();
+    return getLandingStats(db);
+  },
+  ["landing-stats"],
+  { revalidate: 30, tags: ["capabilities", "wallets"] }
+);
+
 export default async function HomePage() {
-  const db = getDb();
   const [featured, stats] = await Promise.all([
-    listFeaturedCapabilities(db, 6),
-    getLandingStats(db),
+    getCachedFeatured(),
+    getCachedLandingStats(),
   ]);
 
   return (
