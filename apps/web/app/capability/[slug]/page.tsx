@@ -4,7 +4,6 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { InstallSnippet } from "@/components/InstallSnippet";
 import { StatusBar } from "@/components/StatusBar";
-import { getSession } from "@/lib/get-session";
 import { getDb } from "@/lib/db";
 import { getCapabilityBySlug, getUsageStats, getWalletById } from "@oryn/db";
 
@@ -20,10 +19,7 @@ export default async function CapabilityDetailPage({
   const { slug } = await params;
 
   const db = getDb();
-  const [session, capability] = await Promise.all([
-    getSession(),
-    getCapabilityBySlug(db, slug),
-  ]);
+  const capability = await getCapabilityBySlug(db, slug);
 
   if (!capability || capability.status !== "published") {
     notFound();
@@ -36,7 +32,8 @@ export default async function CapabilityDetailPage({
   ]);
   const builderAddress = builder?.address ?? capability.builderId;
   const builderShort = `${builderAddress.slice(0, 6)}…${builderAddress.slice(-4)}`;
-  const isOwner = session?.address.toLowerCase() === builderAddress.toLowerCase();
+  // isOwner determined client-side via wallet — keep server render cacheable
+  const isOwner = false;
 
   const isSkill = capability.type === "skill";
   const priceLabel =
@@ -46,7 +43,7 @@ export default async function CapabilityDetailPage({
 
   return (
     <main className="min-h-screen flex flex-col bg-warmdark">
-      <Header showDashboardLink={!!session} />
+      <Header showDashboardLink />
       <StatusBar />
 
       <section className="flex-1 px-6 py-12 max-w-6xl mx-auto w-full">

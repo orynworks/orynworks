@@ -5,14 +5,12 @@ import { CapabilityCard } from "@/components/CapabilityCard";
 import { TerminalDemo } from "@/components/TerminalDemo";
 import { StatusBar } from "@/components/StatusBar";
 import { EyebrowChip } from "@/components/EyebrowChip";
-import { getSession } from "@/lib/get-session";
 import { getDb } from "@/lib/db";
 import { listFeaturedCapabilities, getLandingStats } from "@oryn/db";
 
 export const revalidate = 30;
 
 export default async function HomePage() {
-  const session = await getSession();
   const db = getDb();
   const [featured, stats] = await Promise.all([
     listFeaturedCapabilities(db, 6),
@@ -21,7 +19,7 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen flex flex-col bg-warmdark">
-      <Header showDashboardLink={!!session} />
+      <Header showDashboardLink />
       <StatusBar />
 
       <section className="relative flex flex-col items-center justify-center px-6 py-16 md:py-24 overflow-hidden">

@@ -6,7 +6,6 @@ import { BrowseFilters } from "@/components/BrowseFilters";
 import { CapabilityCard } from "@/components/CapabilityCard";
 import { StatusBar } from "@/components/StatusBar";
 import { EyebrowChip } from "@/components/EyebrowChip";
-import { getSession } from "@/lib/get-session";
 import { getDb } from "@/lib/db";
 import {
   listPublishedCapabilities,
@@ -48,7 +47,6 @@ export default async function BrowsePage({
 }: {
   searchParams: SearchParams;
 }) {
-  const session = await getSession();
   const params = await searchParams;
 
   const typeFilter =
@@ -98,7 +96,7 @@ export default async function BrowsePage({
 
   return (
     <main className="min-h-screen flex flex-col bg-warmdark">
-      <Header showDashboardLink={!!session} />
+      <Header showDashboardLink />
       <StatusBar />
       <section className="flex-1 px-6 py-12 max-w-6xl mx-auto w-full">
         <div className="mb-10">
