@@ -1,0 +1,64 @@
+{
+  "name": "Oryn Works",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": false
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "forwardPorts": [3000, 4000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Web (Next.js)",
+      "onAutoForward": "openPreview",
+      "protocol": "https"
+    },
+    "4000": {
+      "label": "Gateway (Fastify)",
+      "onAutoForward": "notify",
+      "protocol": "https"
+    }
+  },
+  "remoteEnv": {
+    "PNPM_HOME": "/home/node/.local/share/pnpm",
+    "PATH": "${containerEnv:PATH}:/home/node/.local/share/pnpm:/home/node/.foundry/bin"
+  },
+  "containerEnv": {
+    "SHELL": "/bin/bash"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "JuanBlanco.solidity",
+        "tombonnike.vscode-status-bar-format-toggle",
+        "github.vscode-pull-request-github"
+      ],
+      "settings": {
+        "editor.formatOnSave": false,
+        "files.eol": "\n",
+        "files.insertFinalNewline": true,
+        "files.trimTrailingWhitespace": true,
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+        "[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+        "tailwindCSS.experimental.classRegex": [
+          ["className=\\{`([^`]+)`\\}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+        ]
+      }
+    }
+  },
+  "remoteUser": "node",
+  "workspaceFolder": "/workspaces/orynworks",
+  "updateRemoteUserUID": true,
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "32gb"
+  }
+}

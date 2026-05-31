@@ -41,3 +41,5 @@ packages/contracts/broadcast/**
 
 # superpowers brainstorm sessions (per-session, regenerated)
 .superpowers/
+
+.vercel
