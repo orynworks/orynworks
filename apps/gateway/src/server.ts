@@ -8,6 +8,16 @@ import { meRoute } from "./routes/me.js";
 import { skillsRoute } from "./routes/skills.js";
 import { knowledgeRoute } from "./routes/knowledge.js";
 import { mcpDemosRoute } from "./routes/mcp-demos.js";
+import { tokenpriceRoute } from "./mcp-demos/token-price.js";
+import { trendingtokensRoute } from "./mcp-demos/trending-tokens.js";
+import { topgainersRoute } from "./mcp-demos/top-gainers.js";
+import { dexpairsRoute } from "./mcp-demos/dex-pairs.js";
+import { defitvlRoute } from "./mcp-demos/defi-tvl.js";
+import { walletportfolioRoute } from "./mcp-demos/wallet-portfolio.js";
+import { basegasRoute } from "./mcp-demos/base-gas.js";
+import { erc20infoRoute } from "./mcp-demos/erc20-info.js";
+import { txlookupRoute } from "./mcp-demos/tx-lookup.js";
+import { uniswapquoteRoute } from "./mcp-demos/uniswap-quote.js";
 
 export async function buildServer() {
   const fastify = Fastify({
@@ -36,6 +46,16 @@ export async function buildServer() {
   await fastify.register(skillsRoute);
   await fastify.register(knowledgeRoute);
   await fastify.register(mcpDemosRoute);
+  await fastify.register(tokenpriceRoute);
+  await fastify.register(trendingtokensRoute);
+  await fastify.register(topgainersRoute);
+  await fastify.register(dexpairsRoute);
+  await fastify.register(defitvlRoute);
+  await fastify.register(walletportfolioRoute);
+  await fastify.register(basegasRoute);
+  await fastify.register(erc20infoRoute);
+  await fastify.register(txlookupRoute);
+  await fastify.register(uniswapquoteRoute);
 
   return fastify;
 }
