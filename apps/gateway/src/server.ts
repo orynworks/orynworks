@@ -7,6 +7,7 @@ import { healthRoute } from "./routes/health.js";
 import { meRoute } from "./routes/me.js";
 import { skillsRoute } from "./routes/skills.js";
 import { knowledgeRoute } from "./routes/knowledge.js";
+import { mcpDemosRoute } from "./routes/mcp-demos.js";
 
 export async function buildServer() {
   const fastify = Fastify({
@@ -34,6 +35,7 @@ export async function buildServer() {
   await fastify.register(meRoute);
   await fastify.register(skillsRoute);
   await fastify.register(knowledgeRoute);
+  await fastify.register(mcpDemosRoute);
 
   return fastify;
 }

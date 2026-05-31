@@ -9,111 +9,63 @@ if (!databaseUrl) {
   process.exit(1);
 }
 
-// Recognizable seed builder address (DO NOT use a real wallet)
+// Seed builder address — recognisable, not a real wallet.
 const SEED_BUILDER_ADDRESS = "0x000000000000000000000000000000000000d0ed";
+
+// Host URL of the built-in demo capabilities. In dev this is the local gateway.
+// In production these will be re-pointed to the deployed gateway URL.
+const DEMO_HOST = process.env.MCP_DEMO_HOST ?? "http://localhost:4000/mcp";
 
 type SeedCapability = Omit<NewCapability, "builderId">;
 
 const SAMPLES: SeedCapability[] = [
   {
-    slug: "deep-research",
+    slug: "echo-debug",
     type: "skill",
-    name: "Deep Research",
+    name: "Echo Debug",
     description:
-      "Multi-source research toolchain: deep-dive a topic, summarize across 10+ sources, structure findings with citations.\n\nReturns markdown with quoted excerpts and source URLs.",
-    category: "knowledge",
-    hostUrl: "https://deep-research.example.com/mcp",
-    priceUsdc: "0.015",
-    tokenGated: false,
-    status: "published",
-    version: "1.2.0",
-  },
-  {
-    slug: "base-tx-skill",
-    type: "skill",
-    name: "Base Transaction Composer",
-    description:
-      "Compose, simulate, and submit transactions on Base. Supports ERC-20 transfer, swap, and bridge primitives. Returns signed payloads ready for x402 settlement.",
-    category: "action",
-    hostUrl: "https://base-tx.example.com/mcp",
-    priceUsdc: "0",
-    tokenGated: false,
-    status: "published",
-    version: "0.9.1",
-  },
-  {
-    slug: "alpha-feed-dataset",
-    type: "knowledge",
-    name: "Alpha Feed Dataset",
-    description:
-      "Curated daily feed of high-signal posts and announcements from 200+ vetted accounts across DeFi, infra, and AI agents on Base. Vector-indexed for relevance search.",
-    category: "knowledge",
-    hostUrl: "ipfs://bafybeie4alphafeeddatasetexample0001",
-    priceUsdc: "0.02",
-    tokenGated: false,
-    status: "published",
-    version: "2.0.0",
-  },
-  {
-    slug: "onchain-identity",
-    type: "skill",
-    name: "On-chain Identity Resolver",
-    description:
-      "Resolve ENS, Basenames, Farcaster handles, Lens handles to wallet addresses (and back). Caches results for 12h. Reads on-chain only — no off-chain trust.",
-    category: "data",
-    hostUrl: "https://identity.example.com/mcp",
+      "Lightweight diagnostic capability that mirrors any input back with a server-generated timestamp and request id.\n\nUse it to verify the install → call → settle loop end-to-end before plugging in real logic.",
+    category: "utility",
+    hostUrl: `${DEMO_HOST}/echo`,
     priceUsdc: "0",
     tokenGated: false,
     status: "published",
     version: "1.0.0",
   },
   {
-    slug: "twitter-mentions-watcher",
+    slug: "base-live-block",
     type: "skill",
-    name: "Twitter Mentions Watcher",
+    name: "Base Live Block",
     description:
-      "Polls Twitter for new mentions of a target handle. Returns a normalized stream of posts with author, timestamp, and engagement signals. Useful for agent auto-reply pipelines.",
+      "Real-time block info for Base mainnet (chainId 8453) or Base Sepolia (84532). Returns block number, hash, timestamp, and transaction count.\n\nUseful for agents that need to time on-chain actions or display chain health.",
     category: "data",
-    hostUrl: "https://mentions.example.com/mcp",
-    priceUsdc: "0.008",
-    tokenGated: false,
-    status: "published",
-    version: "0.4.2",
-  },
-  {
-    slug: "smart-contract-summarizer",
-    type: "skill",
-    name: "Smart Contract Summarizer",
-    description:
-      "Given a contract address, fetches source from Basescan, produces a plain-English summary of what the contract does, flags risks (proxy/upgrade patterns, owner privileges).",
-    category: "utility",
-    hostUrl: "https://contract-summary.example.com/mcp",
-    priceUsdc: "0.012",
-    tokenGated: false,
-    status: "published",
-    version: "1.1.0",
-  },
-  {
-    slug: "base-dex-quotes",
-    type: "skill",
-    name: "Base DEX Quote Aggregator",
-    description:
-      "Live quote aggregation across Uniswap, Aerodrome, Velodrome, and Baseswap. Returns the best route with gas estimate. Read-only (does not submit).",
-    category: "data",
-    hostUrl: "https://dex-quotes.example.com/mcp",
+    hostUrl: `${DEMO_HOST}/base-block`,
     priceUsdc: "0",
     tokenGated: false,
     status: "published",
-    version: "0.7.0",
+    version: "1.0.0",
   },
   {
-    slug: "agent-playbook-vault",
-    type: "knowledge",
-    name: "Agent Playbook Vault",
+    slug: "ens-resolver",
+    type: "skill",
+    name: "ENS Resolver",
     description:
-      "Library of vetted agent patterns: research, trading, social, monitoring, content production. Each pattern includes prompt template, expected tools, and known failure modes.",
+      "Bidirectional ENS resolution. Send `{ name: 'vitalik.eth' }` to get the address, or `{ address: '0x...' }` to reverse-resolve to the primary ENS name. Uses public Ethereum mainnet RPC.\n\nReturns `{ resolved: true|false }` so agents can fall back gracefully.",
+    category: "data",
+    hostUrl: `${DEMO_HOST}/ens-lookup`,
+    priceUsdc: "0",
+    tokenGated: false,
+    status: "published",
+    version: "1.0.0",
+  },
+  {
+    slug: "github-trending",
+    type: "knowledge",
+    name: "GitHub Trending",
+    description:
+      "Top GitHub repositories created in the last 7 days, filtered by language. Returns full repo metadata: stars, description, owner, URL.\n\nLanguages supported: typescript, javascript, python, rust, go, solidity, java, swift, kotlin. Defaults to typescript.",
     category: "knowledge",
-    hostUrl: "ipfs://bafybeie4playbookvaultexample0001",
+    hostUrl: `${DEMO_HOST}/github-trending`,
     priceUsdc: "0",
     tokenGated: false,
     status: "published",
@@ -125,7 +77,6 @@ async function main() {
   const sql = postgres(databaseUrl!, { max: 1 });
   const db = drizzle(sql, { schema: { wallet, capability } });
 
-  // Upsert seed builder wallet
   let seedBuilder = await db
     .select()
     .from(wallet)
@@ -138,7 +89,7 @@ async function main() {
       .values({
         address: SEED_BUILDER_ADDRESS,
         displayName: "Oryn Seed",
-        bio: "Sample builder for development and demos. Capabilities listed under this account are placeholders.",
+        bio: "Builder identity used for built-in demo capabilities maintained by the Oryn team. These are real working endpoints, not placeholders.",
         twitter: "orynworks",
       })
       .returning();
@@ -150,7 +101,6 @@ async function main() {
 
   const builderId = seedBuilder[0].id;
 
-  // Insert each sample (idempotent)
   let createdCount = 0;
   let skippedCount = 0;
   for (const sample of SAMPLES) {

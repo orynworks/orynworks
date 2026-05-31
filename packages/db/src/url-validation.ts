@@ -69,9 +69,14 @@ export function validateHostUrl(input: string): UrlValidation {
     return { ok: false, reason: "Only http(s) URLs are allowed" };
   }
 
-  // Strip brackets for IPv6 hostnames
+  // In dev/test we allow loopback so locally-hosted MCP servers (e.g.
+  // Next.js API routes at localhost:3000) can be wired into seed data
+  // and exercised end-to-end via the gateway. Production rejects.
+  const allowLoopback =
+    process.env.NODE_ENV !== "production" || process.env.ALLOW_LOOPBACK_HOSTS === "1";
+
   const hostname = url.hostname;
-  if (isPrivateHostname(hostname)) {
+  if (isPrivateHostname(hostname) && !allowLoopback) {
     return {
       ok: false,
       reason: "Host points to a private, loopback, or reserved address",

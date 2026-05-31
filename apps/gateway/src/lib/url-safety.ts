@@ -29,8 +29,14 @@ export async function verifyProxyUrl(input: string): Promise<ProxyUrlVerdict> {
     return { ok: false, reason: "DNS returned no addresses" };
   }
 
+  // Dev/test bypass: same gate as validateHostUrl. Lets local MCP demos
+  // (gateway proxying to its own /mcp/* routes via localhost) work end-to-end
+  // without disabling the production SSRF rule.
+  const allowLoopback =
+    process.env.NODE_ENV !== "production" || process.env.ALLOW_LOOPBACK_HOSTS === "1";
+
   for (const a of addresses) {
-    if (isPrivateHostname(a.address)) {
+    if (isPrivateHostname(a.address) && !allowLoopback) {
       return {
         ok: false,
         reason: `Host resolves to private address ${a.address}`,
