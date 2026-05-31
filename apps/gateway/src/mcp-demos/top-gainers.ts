@@ -62,16 +62,15 @@ export const topgainersRoute: FastifyPluginAsync = async (fastify) => {
       }
       const limit = Math.min(rawLimit, MAX_LIMIT);
 
-      const order =
-        direction === "gainers"
-          ? "price_change_percentage_24h_desc"
-          : "price_change_percentage_24h_asc";
-
+      // CoinGecko's /coins/markets does NOT support price_change ordering server-side
+      // (only market_cap / volume / id). Pull the top universe by market cap, then
+      // sort + slice client-side by 24h change so the response actually reflects
+      // direction=gainers vs direction=losers.
       const url =
         `https://api.coingecko.com/api/v3/coins/markets` +
         `?vs_currency=usd` +
-        `&order=${order}` +
-        `&per_page=${limit}` +
+        `&order=market_cap_desc` +
+        `&per_page=250` +
         `&page=1` +
         `&sparkline=false` +
         `&price_change_percentage=24h`;
@@ -83,7 +82,7 @@ export const topgainersRoute: FastifyPluginAsync = async (fastify) => {
             accept: "application/json",
             "user-agent": USER_AGENT,
           },
-          signal: AbortSignal.timeout(8000),
+          signal: AbortSignal.timeout(10_000),
         });
 
         if (!res.ok) {
@@ -101,8 +100,13 @@ export const topgainersRoute: FastifyPluginAsync = async (fastify) => {
           });
         }
 
-        const items: TopGainersItem[] = (data as CoinGeckoMarket[]).map(
-          (coin) => ({
+        const all: TopGainersItem[] = (data as CoinGeckoMarket[])
+          .filter(
+            (coin) =>
+              typeof coin.price_change_percentage_24h === "number" &&
+              Number.isFinite(coin.price_change_percentage_24h),
+          )
+          .map((coin) => ({
             id: String(coin.id ?? ""),
             symbol: String(coin.symbol ?? "").toUpperCase(),
             name: String(coin.name ?? ""),
@@ -121,8 +125,15 @@ export const topgainersRoute: FastifyPluginAsync = async (fastify) => {
               typeof coin.market_cap_rank === "number"
                 ? coin.market_cap_rank
                 : null,
-          }),
-        );
+          }));
+
+        all.sort((a, b) => {
+          const aCh = a.change24h ?? 0;
+          const bCh = b.change24h ?? 0;
+          return direction === "gainers" ? bCh - aCh : aCh - bCh;
+        });
+
+        const items = all.slice(0, limit);
 
         return {
           capability: CAPABILITY,
