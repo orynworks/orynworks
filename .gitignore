@@ -29,9 +29,15 @@ build/
 packages/contracts/cache/
 packages/contracts/out/
 packages/contracts/broadcast/
+packages/contracts/broadcast/**
+**/broadcast/
 
 # postgres data
 .postgres-data/
+
+# claude code transient
+.claude/
+*.tmp
 
 # superpowers brainstorm sessions (per-session, regenerated)
 .superpowers/
