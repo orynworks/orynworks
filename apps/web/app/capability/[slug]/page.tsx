@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { InstallSnippet } from "@/components/InstallSnippet";
 import { StatusBar } from "@/components/StatusBar";
 import { getDb } from "@/lib/db";
+import { getCapabilityExample } from "@/lib/capability-examples";
 import {
   getCapabilityBySlug,
   getUsageStats,
@@ -149,9 +150,21 @@ export default async function CapabilityDetailPage({
               <h2 className="text-xs tracking-[0.3em] text-cream/60 uppercase mb-4 font-mono">
                 How to use
               </h2>
-              <InstallSnippet slug={capability.slug} type={capability.type} />
-              <p className="text-xs text-cream/40 mt-2 font-mono">
-                Requires the <code>orynworks</code> SDK. Coming soon.
+              <InstallSnippet
+                slug={capability.slug}
+                type={capability.type}
+                mcpPath={getCapabilityExample(capability.slug)?.mcpPath}
+                exampleBody={getCapabilityExample(capability.slug)?.exampleBody}
+              />
+              <p className="text-xs text-cream/40 mt-3 font-mono">
+                Need help wiring it up? See the{" "}
+                <Link
+                  href="/docs"
+                  className="text-cream/70 hover:text-orange underline-offset-4 hover:underline"
+                >
+                  docs
+                </Link>
+                .
               </p>
             </section>
 

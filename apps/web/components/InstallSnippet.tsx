@@ -5,11 +5,18 @@ import { useState } from "react";
 type Props = {
   slug: string;
   type: "skill" | "knowledge";
+  mcpPath?: string;
+  exampleBody?: string;
 };
 
-export function InstallSnippet({ slug }: Props) {
+type TerminalProps = {
+  label: string;
+  command: string;
+  multiline?: boolean;
+};
+
+function Terminal({ label, command, multiline = false }: TerminalProps) {
   const [copied, setCopied] = useState(false);
-  const command = `npx orynworks install ${slug}`;
 
   async function handleCopy() {
     await navigator.clipboard.writeText(command);
@@ -23,20 +30,68 @@ export function InstallSnippet({ slug }: Props) {
         <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
         <span className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
         <span className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
-        <span className="ml-3 text-[10px] font-mono text-cream/40 tracking-[0.2em] uppercase">
-          install · {slug}
+        <span className="ml-3 text-[10px] font-mono text-cream/40 tracking-[0.2em] uppercase truncate">
+          {label}
         </span>
         <button
           onClick={handleCopy}
-          className="ml-auto text-[10px] font-mono uppercase tracking-[0.2em] text-cream/50 hover:text-orange transition-colors"
+          className="ml-auto shrink-0 text-[10px] font-mono uppercase tracking-[0.2em] text-cream/50 hover:text-orange transition-colors"
         >
           {copied ? "copied ✓" : "copy"}
         </button>
       </div>
-      <div className="px-5 py-4 font-mono text-[13px] text-cream/85 flex items-center gap-3 overflow-x-auto">
+      <div className="px-5 py-4 font-mono text-[13px] text-cream/85 flex items-start gap-3 overflow-x-auto">
         <span className="text-orange shrink-0">$</span>
-        <code className="whitespace-nowrap">{command}</code>
+        <code
+          className={
+            multiline
+              ? "whitespace-pre"
+              : "whitespace-nowrap"
+          }
+        >
+          {command}
+        </code>
       </div>
+    </div>
+  );
+}
+
+export function InstallSnippet({ slug, type, mcpPath, exampleBody }: Props) {
+  const installCommand = `npx orynworks install ${slug}`;
+
+  // Only render the curl block when we have an mcpPath. The capability detail
+  // page passes this in from CALL_EXAMPLES; if a slug isn't in the map we
+  // gracefully degrade to just the install command.
+  const showCurl = Boolean(mcpPath && exampleBody);
+  const verbSegment = type === "skill" ? "skills" : "knowledge";
+  const actionSegment = type === "skill" ? "call" : "query";
+  const curlCommand = showCurl
+    ? `curl -X POST https://api.oryn.works/v1/${verbSegment}/${mcpPath}/${actionSegment} \\
+    -H "Content-Type: application/json" \\
+    -d '${exampleBody}'`
+    : "";
+
+  return (
+    <div className="space-y-5">
+      <div className="space-y-2">
+        <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-cream/45">
+          1 · install for your MCP client
+        </p>
+        <Terminal label={`install · ${slug}`} command={installCommand} />
+      </div>
+
+      {showCurl && (
+        <div className="space-y-2">
+          <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-cream/45">
+            2 · or call it directly with curl
+          </p>
+          <Terminal
+            label={`${actionSegment} · ${mcpPath}`}
+            command={curlCommand}
+            multiline
+          />
+        </div>
+      )}
     </div>
   );
 }
